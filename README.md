@@ -44,8 +44,8 @@ To run this tool, you will need initialise with the following variables.
 | `CHALLENGES`           | array    |                   | `['up', 'right', 'down', 'left', 'up']` | Array of  `challenges`  that can be used for Demo purposes.                                                      |
 | `STOP_AFTER`           | int      |                   | `10000`                                 | Stopping timer in ms.                                                                                            |
 | `COUNTDOWN`            | int      |                   | `3000`                                  | Countdown in ms before picture is taken.                                                                         |
-| `COUNTDOWN_MIN`        | int      | `500`             | `500`                                   | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
-| `COUNTDOWN_MAX`        | int      | `1500`            | `1500`                                  | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
+| `COUNTDOWN_MIN`        | int      | `0`             | `0`                                   | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
+| `COUNTDOWN_MAX`        | int      | `500`            | `500`                                  | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
 
 ## Usage/Examples
 
