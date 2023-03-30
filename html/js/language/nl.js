@@ -9,8 +9,8 @@ const LANGUAGE = {
     "exp_light": "De afbeelding is te licht.\nZoek een minder verlichte omgeving.",
     "blur": "Afbeelding is niet scherp,\nblijf alstublieft stil.",
     "capture_error": "We konden geen afbeelding vastleggen.\nToegang tot de camera is vereist.",
-    "challenge_1": "Beweeg uw gezicht langzaam omhoog.",
-    "challenge_2": "Beweeg uw gezicht langzaam naar rechts.",
-    "challenge_3": "Beweeg uw gezicht langzaam omlaag.",
-    "challenge_4": "Beweeg uw gezicht langzaam naar links."
+    "challenge_1": "Beweeg uw gezicht langzaam omhoog\nen houd stil.",
+    "challenge_2": "Beweeg uw gezicht langzaam naar rechts\nen houd stil.",
+    "challenge_3": "Beweeg uw gezicht langzaam omlaag\nen houd stil.",
+    "challenge_4": "Beweeg uw gezicht langzaam naar links\nen houd stil."
 }
