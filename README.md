@@ -184,10 +184,10 @@ const LANGUAGE = {
     "exp_light": "The image is too light.\nFind a dimmer environment.",
     "blur": "Image is not sharp,\nplease stay still.",
     "capture_error": "We could not capture an image.\nAccess to the camera is required.",
-    "challenge_1": "Slowly move your face up.",
-    "challenge_2": "Slowly move your face to the right.",
-    "challenge_3": "Slowly move your face down.",
-    "challenge_4": "Slowly move your face to the left."
+    "challenge_1": "Slowly move your face up\nand hold still.",
+    "challenge_2": "Slowly move your face to the right\nand hold still.",
+    "challenge_3": "Slowly move your face down\nand hold still.",
+    "challenge_4": "Slowly move your face to the left\nand hold still."
 }
 ```
 
