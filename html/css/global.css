@@ -52,7 +52,7 @@ html {
     z-index: 1003;
     position: absolute;
     flex-direction: column;
-    top:5%;
+    top:3%;
 }
 
 #alertBox {
