@@ -1,4 +1,4 @@
-const LANGUAGE = {
+var LANGUAGE = {
     "start_prompt": "Tik om te starten.",
     "no_face": "Geen gezicht gedetecteerd,\nplaats uw gezicht in het frame.",
     "nod_head": "Knik alstublieft met uw hoofd.",
@@ -10,7 +10,15 @@ const LANGUAGE = {
     "blur": "Afbeelding is niet scherp,\nblijf alstublieft stil.",
     "capture_error": "We konden geen afbeelding vastleggen.\nToegang tot de camera is vereist.",
     "challenge_1": "Beweeg uw gezicht langzaam omhoog\nen houd stil.",
+    "challenge_12": "Let op je kijkt schuin omhoog,\nbeweeg uw gezicht langzaam omhoog\nen houd stil.",
+    "challenge_14": "Let op je kijkt schuin omhoog,\nbeweeg uw gezicht langzaam omhoog\nen houd stil.",
     "challenge_2": "Beweeg uw gezicht langzaam naar rechts\nen houd stil.",
+    "challenge_21": "Let op je kijkt schuin omhoog,\nbeweeg uw gezicht langzaam naar rechts\nen houd stil.",
+    "challenge_23": "Let op je kijkt schuin omlaag,\nbeweeg uw gezicht langzaam naar rechts\nen houd stil.",
     "challenge_3": "Beweeg uw gezicht langzaam omlaag\nen houd stil.",
-    "challenge_4": "Beweeg uw gezicht langzaam naar links\nen houd stil."
+    "challenge_32": "Let op je kijkt schuin omlaag,\nbeweeg uw gezicht langzaam omlaag\nen houd stil.",
+    "challenge_34": "Let op je kijkt schuin omlaag,\nbeweeg uw gezicht langzaam omlaag\nen houd stil.",
+    "challenge_4": "Beweeg uw gezicht langzaam naar links\nen houd stil.",
+    "challenge_41": "Let op je kijkt schuin omhoog,\nbeweeg uw gezicht langzaam naar links\nen houd stil.",
+    "challenge_43": "Let op je kijkt schuin omlaag,\nbeweeg uw gezicht langzaam naar links\nen houd stil."
 }

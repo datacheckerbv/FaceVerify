@@ -27,6 +27,7 @@
         onError: function(error) {
             console.log(error)
             FV.stop();
+            FV.alert(error)
         }
     }).then(() => {
         // Tap to start

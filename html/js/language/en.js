@@ -1,4 +1,4 @@
-const LANGUAGE = {
+var LANGUAGE = {
     "start_prompt": "Tap to start.",
     "no_face": "No face detected,\nplease position your face in the frame.",
     "nod_head": "Please nod your head slightly.",
@@ -10,7 +10,15 @@ const LANGUAGE = {
     "blur": "Image is not sharp,\nplease stay still.",
     "capture_error": "We could not capture an image.\nAccess to the camera is required.",
     "challenge_1": "Slowly move your face up\nand hold still.",
+    "challenge_12": "Watch out, you are looking diagonally upwards.\nSlowly move your face upwards and hold still.",
+    "challenge_14": "Watch out, you are looking diagonally upwards.\nSlowly move your face upwards and hold still.",
     "challenge_2": "Slowly move your face to the right\nand hold still.",
+    "challenge_21": "Watch out, you are looking diagonally upwards.\nSlowly move your face to the right and hold still.",
+    "challenge_23": "Watch out, you are looking diagonally downwards.\nSlowly move your face to the right and hold still.",
     "challenge_3": "Slowly move your face down\nand hold still.",
-    "challenge_4": "Slowly move your face to the left\nand hold still."
+    "challenge_32": "Watch out, you are looking diagonally downwards.\nSlowly move your face downwards and hold still.",
+    "challenge_34": "Watch out, you are looking diagonally downwards.\nSlowly move your face downwards and hold still.",
+    "challenge_4": "Slowly move your face to the left\nand hold still.",
+    "challenge_41": "Watch out, you are looking diagonally upwards.\nSlowly move your face to the left and hold still.",
+    "challenge_43": "Watch out, you are looking diagonally downwards.\nSlowly move your face to the left and hold still."
     }
