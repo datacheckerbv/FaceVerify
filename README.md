@@ -51,6 +51,10 @@ To run this tool, you will need initialise with the following variables.
 | `COUNTDOWN`            | int      | `0`               | `3000`                                  | Countdown in ms before picture is taken.                                                                         |
 | `COUNTDOWN_MIN`        | int      | `0`             | `0`                                   | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
 | `COUNTDOWN_MAX`        | int      | `500`            | `500`                                  | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
+| `UP_THRESHOLD`        | int      | `40`            | `40`                                  | Challenge `up` threshold value.               |
+| `DOWN_THRESHOLD`        | int      | `45`            | `45`                                  | Challenge `down` threshold value.               |
+| `LEFT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `left` threshold value.               |
+| `RIGHT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `right` threshold value.               |
 
 ## Usage/Examples
 
@@ -292,3 +296,8 @@ Example:
 - Assigned variables will be reinitiliased on retry.
 - FaceVerify instance can now be reused or reinited.
 - Languages can now be changed on retry. Was not possible due to constant variables.
+
+## *CHANGES* v1.3.2
+
+- Increased challenge thresholds and are now configurable. (see [Configuration](#configuration))
+- Corner notifications where missing from default notifications, are now present.
