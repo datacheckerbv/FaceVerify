@@ -9,6 +9,8 @@ var LANGUAGE = {
     "exp_light": "De afbeelding is te licht.\nZoek een minder verlichte omgeving.",
     "blur": "Afbeelding is niet scherp,\nblijf alstublieft stil.",
     "capture_error": "We konden geen afbeelding vastleggen.\nToegang tot de camera is vereist.",
+    "challenge_0": "Beweeg uw gezicht naar het midden.",
+    "challenge_out": "Let op, je gezicht is te ver in de aangegeven richting.\nBeweeg iets terug.",
     "challenge_1": "Beweeg uw gezicht langzaam omhoog\nen houd stil.",
     "challenge_12": "Let op je kijkt schuin omhoog,\nbeweeg uw gezicht langzaam omhoog\nen houd stil.",
     "challenge_14": "Let op je kijkt schuin omhoog,\nbeweeg uw gezicht langzaam omhoog\nen houd stil.",

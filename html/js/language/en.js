@@ -9,6 +9,8 @@ var LANGUAGE = {
     "exp_light": "The image is too light.\nFind a dimmer environment.",
     "blur": "Image is not sharp,\nplease stay still.",
     "capture_error": "We could not capture an image.\nAccess to the camera is required.",
+    "challenge_0": "Slowly move your face to the center.",
+    "challenge_out": "Watch out, your face is too far in the specified direction.\nMove slightly back.",
     "challenge_1": "Slowly move your face up\nand hold still.",
     "challenge_12": "Watch out, you are looking diagonally upwards.\nSlowly move your face upwards and hold still.",
     "challenge_14": "Watch out, you are looking diagonally upwards.\nSlowly move your face upwards and hold still.",

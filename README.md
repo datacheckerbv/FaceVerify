@@ -55,6 +55,8 @@ To run this tool, you will need initialise with the following variables.
 | `DOWN_THRESHOLD`        | int      | `45`            | `45`                                  | Challenge `down` threshold value.               |
 | `LEFT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `left` threshold value.               |
 | `RIGHT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `right` threshold value.               |
+| `BACKEND`        | string      | `wasm`            | `wasm`                                  | Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended.             |
+| `CAPTURE_CHALLENGE_SETS`        | bool      | `true`            | `true`                                  | Capture second picture after initial challenge is captured. By setting this to `true` liveness detection is improved.  |
 
 ## Usage/Examples
 
@@ -272,7 +274,6 @@ Example:
 }
 ```
 
-
 ## *CHANGES* v1.3.0
 
 - Added under exposure check.
@@ -301,3 +302,11 @@ Example:
 
 - Increased challenge thresholds and are now configurable. (see [Configuration](#configuration))
 - Corner notifications where missing from default notifications, are now present.
+
+## *CHANGES* v1.3.3
+
+- Neural network execution provider is now configurable. (see [Configuration](#configuration))
+- To improve post-process liveness detection, challenge pictures will now be captured as sets. After each challenge capture, the user will be promted to move back to the center where a second picture will be taken.  (see [Configuration](#configuration))
+- iOS 15 bug fix.
+- Increased oval frame size.
+- There is now a limit to how far you can turn your face.
