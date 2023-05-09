@@ -306,7 +306,7 @@ Example:
 ## *CHANGES* v1.3.3
 
 - Neural network execution provider is now configurable. (see [Configuration](#configuration))
-- To improve post-process liveness detection, challenge pictures will now be captured as sets. After each challenge capture, the user will be promted to move back to the center where a second picture will be taken.  (see [Configuration](#configuration))
+- Challenge pictures will now be captured as sets to improve post-process liveness detection. After each challenge capture, the user will be prompted to return to the centre where a second picture will be taken.  (see [Configuration](#configuration))
 - iOS 15 bug fix.
 - Increased oval frame size.
-- There is now a limit to how far you can turn your face.
+- How far you can turn your face is now a limit.
