@@ -51,8 +51,8 @@ To run this tool, you will need initialise with the following variables.
 | `COUNTDOWN`            | int      | `0`               | `3000`                                  | Countdown in ms before picture is taken.                                                                         |
 | `COUNTDOWN_MIN`        | int      | `0`             | `0`                                   | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
 | `COUNTDOWN_MAX`        | int      | `500`            | `500`                                  | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
-| `UP_THRESHOLD`        | int      | `40`            | `40`                                  | Challenge `up` threshold value.               |
-| `DOWN_THRESHOLD`        | int      | `45`            | `45`                                  | Challenge `down` threshold value.               |
+| `UP_THRESHOLD`        | int      | `35`            | `35`                                  | Challenge `up` threshold value.               |
+| `DOWN_THRESHOLD`        | int      | `30`            | `30`                                  | Challenge `down` threshold value.               |
 | `LEFT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `left` threshold value.               |
 | `RIGHT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `right` threshold value.               |
 | `BACKEND`        | string      | `wasm`            | `wasm`                                  | Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended.             |
