@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>FaceVerify</title>
-<link href="css/global.css" rel="stylesheet" type="text/css" />
+<link href="css/faceverify.css" rel="stylesheet" type="text/css" />
 <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
@@ -14,26 +14,5 @@
 </body>
 
 <script src="js/faceverify.obf.js" type="text/javascript"></script>
-<script>
-    let FV = new FaceVerify();
-    FV.init({
-        CONTAINER_ID: 'FV_mount',
-        LANGUAGE: 'en',
-        TOKEN:"eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ==",
-        onComplete: function(data) {
-            console.log(data)
-            FV.stop();
-        },
-        onError: function(error) {
-            console.log(error)
-            FV.stop();
-            FV.alert(error)
-        }
-    }).then(() => {
-        // Tap to start
-        document.addEventListener('touchstart', FV.start)
-        window.onclick = FV.start
-    });    
-</script>
 
 </html>

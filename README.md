@@ -9,7 +9,6 @@ The tool features user challenge-response, namely head pose estimation, in order
 
 The tool will be run in the browser and is therefore written in JavaScript.
 
-
 ## Trigger mechanism
 
 The tool performs the following checks:
@@ -29,38 +28,62 @@ The movement check will only be used for the second picture. Since the first pic
 
 To run this tool, you will need initialise with the following variables.
 
-### Required
+| **ATTRIBUTE**            | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                                                                                              | **NOTES**                                                                                                                                              |
+| ------------------------ | ------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `BACKEND`                | string              | `wasm`                                 | `wasm`                                                                                                   | **optional**<br> Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended. |
+| `CAPTURE_CHALLENGE_SETS` | bool                | `true`                                 | `true`                                                                                                   | **optional**<br> Capture second picture after initial challenge is captured. By setting this to `true` liveness detection is improved.                 |
+| `CAPTURE_WAITING_TIME`   | int                 | `500`                                  | `500`                                                                                                    | **optional**<br> Waiting time between capturing in milliseconds.                                                                                       |
+| `CHALLENGES`             | array               |                                        | `['up', 'right', 'down', 'left', 'up']`                                                                  | **optional**<br> Array of `challenges` that can be used for Demo purposes.                                                                             |
+| `CONTAINER_ID`           | string              |                                        | `"FV_mount"`                                                                                             | **required**<br> *div id* to mount tool on.                                                                                                            |
+| `COUNTDOWN_MAX`          | int                 | `500`                                  | `500`                                                                                                    | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                      |
+| `COUNTDOWN_MIN`          | int                 | `0`                                    | `0`                                                                                                      | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                      |
+| `COUNTDOWN`              | int                 | `0`                                    | `3000`                                                                                                   | **optional**<br> Countdown in ms before picture is taken.                                                                                              |
+| `DOWN_THRESHOLD`         | int                 | `30`                                   | `30`                                                                                                     | **optional**<br> Challenge `down` threshold value.                                                                                                     |
+| `LANGUAGE`               | string              | `"nl"`                                 | `"nl"`                                                                                                   | **required**<br> Notifications in specific language.                                                                                                   |
+| `LEFT_THRESHOLD`         | int                 | `22`                                   | `22`                                                                                                     | **optional**<br> Challenge `left` threshold value.                                                                                                     |
+| `MODELS_PATH`            | string              | `"models/"`                            | `"models/"`                                                                                              | **optional**<br> Path referring to models location.                                                                                                    |
+| `MOVEMENT_THRESHOLD`     | int                 | `20`                                   | `20`                                                                                                     | **optional**<br> Movement will be calculated from frame to frame with a value between 0-100. Recommended value between 20 and 30.                      |
+| `RIGHT_THRESHOLD`        | int                 | `22`                                   | `22`                                                                                                     | **optional**<br> Challenge `right` threshold value.                                                                                                    |
+| `ROOT`                   | string              | `""`                                   | `"../"`                                                                                                  | **optional**<br> Root location.                                                                                                                        |
+| `STOP_AFTER`             | int                 |                                        | `10000`                                                                                                  | **optional**<br> Stopping timer in ms.                                                                                                                 |
+| `TOKEN`                  | string              |                                        | `"eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ=="` | **required**<br> *base64 token* string containing *challenges* and *transaction id*.                                                                   |
+| `UP_THRESHOLD`           | int                 | `35`                                   | `35`                                                                                                     | **optional**<br> Challenge `up` threshold value.                                                                                                       |
+| `onComplete`             | javascript function |                                        | `function(data) {console.log(data)}`                                                                     | **required**<br> Callback function on *complete* .                                                                                                     |
+| `onError`                | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`                                                                   | **optional**<br> Callback function on *error*.                                                                                                         |
+| `onUserExit`             | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}`                                                                | **optional**<br> Callback function on *user exit*.                                                                                                     |
 
-| **name**       | **type**            | **default value** | **example**                            | **description**                                                     |
-|----------------|---------------------|-------------------|----------------------------------------|---------------------------------------------------------------------|
-| `CONTAINER_ID` | string              |                   | `"FV_mount"`                           | *div id*  to mount tool on.                                         |
-| `TOKEN`        | string              |                   | `"eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ=="`                  | *base64 token* string containing *challenges* and *transaction id*. |
-| `LANGUAGE` | string              |  `"nl"`                 | `"nl"`                           | Notifications in specific language. 
-| `onComplete`   | javascript function |                   | `function(data) {console.log(data)}`   | callback function on  *complete* .                                  |
-| `onError`      | javascript function |                   | `function(error) {console.log(error)}` | callback function on *error*.                                       |
+## Handling callbacks
 
-### Optional
+```javascript
+let FV = new FaceVerify();
+FV.init({
+    CONTAINER_ID: 'FV_mount',
+    LANGUAGE: 'en',
+    onComplete: function(data) {
+        console.log(data);
+        FV.stop();
+    },
+    onError: function(error) {
+        console.log(error)
+        FV.stop();
+        FV.alert(error)
+    },
+    onUserExit: function(error) {
+        console.log(error);
+        FV.stop();
+    }
+});
+```
 
-| **name**               | **type** | **default value** | **example**                             | **description**                                                                                                  |
-|------------------------|----------|-------------------|-----------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| `MODELS_PATH`   | string      | `"models/"`              | `"models/"`                          | Path referring to models location.                                                                               |
-| `MOVEMENT_THRESHOLD`   | int      | `20`              | `20`                                    | Movement will be calculated from frame to frame with a value between 0-100. Recommended value between 20 and 30. |
-| `CAPTURE_WAITING_TIME` | int      | `500`             | `500`                                   | Waiting time between capturing in milliseconds.                                                                  |
-| `CHALLENGES`           | array    |                   | `['up', 'right', 'down', 'left', 'up']` | Array of  `challenges`  that can be used for Demo purposes.                                                      |
-| `STOP_AFTER`           | int      |                   | `10000`                                 | Stopping timer in ms.                                                                                            |
-| `COUNTDOWN`            | int      | `0`               | `3000`                                  | Countdown in ms before picture is taken.                                                                         |
-| `COUNTDOWN_MIN`        | int      | `0`             | `0`                                   | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
-| `COUNTDOWN_MAX`        | int      | `500`            | `500`                                  | If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                 |
-| `UP_THRESHOLD`        | int      | `35`            | `35`                                  | Challenge `up` threshold value.               |
-| `DOWN_THRESHOLD`        | int      | `30`            | `30`                                  | Challenge `down` threshold value.               |
-| `LEFT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `left` threshold value.               |
-| `RIGHT_THRESHOLD`        | int      | `22`            | `22`                                  | Challenge `right` threshold value.               |
-| `BACKEND`        | string      | `wasm`            | `wasm`                                  | Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended.             |
-| `CAPTURE_CHALLENGE_SETS`        | bool      | `true`            | `true`                                  | Capture second picture after initial challenge is captured. By setting this to `true` liveness detection is improved.  |
+| **ATTRIBUTE**            | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                                                                                              | **NOTES**                                                                                                                                              |
+| ------------------------ | ------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `onComplete`             | javascript function |                                        | `function(data) {console.log(data)}`                                                                     | **required**<br> Callback that fires when all interactive tasks in the workflow have been completed.                                                                                                     |
+| `onError`                | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`                                                                   | **optional**<br> Callback that fires when an *error* occurs.                                                                                                         |
+| `onUserExit`             | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}`                                                                | **optional**<br> Callback that fires when the user exits the flow without completing it.                                                                                                     |
 
 ## Usage/Examples
 
-The tool first needs to be initialised to load all the models. 
+The tool first needs to be initialised to load all the models.
 Once its initialised, it can be started with the function `FV.start();`
 
 ```javascript
@@ -69,7 +92,8 @@ FV.init({
     CONTAINER_ID: ...,
     LANGUAGE: ...,
     onComplete: ...,
-    onError: ...
+    onError: ...,
+    onUserExit: ...,
 }).then(() => {
     FV.start();
 });
@@ -97,21 +121,20 @@ FV.init({
         console.log(error)
         FV.stop();
         FV.alert(error)
-    }
-}).then(() => {
-    // Tap to start
-    document.addEventListener('touchstart', FV.start)
-    window.onclick = FV.start
+    },
+    onUserExit: function(error) {
+        console.log(error);
+        FV.stop();
+    },
 });
 ```
-
 
 ## Requirements
 
 CSS stylesheet.
 
 ```html
-<link href="css/global.css" rel="stylesheet" type="text/css" />
+<link href="css/faceverify.css" rel="stylesheet" type="text/css" />
 ```
 
 The meta tags below are required to view the tool properly.
@@ -137,7 +160,7 @@ File present under `html/index.html`
 <head>
 <meta charset="utf-8">
 <title>FaceVerify</title>
-<link href="css/global.css" rel="stylesheet" type="text/css" />
+<link href="css/faceverify.css" rel="stylesheet" type="text/css" />
 <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
@@ -162,11 +185,11 @@ File present under `html/index.html`
             console.log(error)
             FV.stop();
             FV.alert(error)
-        }
-    }).then(() => {
-        // Tap to start
-        document.addEventListener('touchstart', FV.start)
-        window.onclick = FV.start
+        },
+        onUserExit: function(error) {
+            console.log(error);
+            FV.stop();
+        },
     });    
 </script>
 
@@ -192,7 +215,7 @@ The keys can be derived from the current language js files (`js/language/en.js`)
 Example:
 
 ```javascript
-const LANGUAGE = {
+var LANGUAGE = {
     "start_prompt": "Tap to start.",
     "no_face": "No face detected,\nplease position your face in the frame.",
     "nod_head": "Please nod your head slightly.",
@@ -203,10 +226,20 @@ const LANGUAGE = {
     "exp_light": "The image is too light.\nFind a dimmer environment.",
     "blur": "Image is not sharp,\nplease stay still.",
     "capture_error": "We could not capture an image.\nAccess to the camera is required.",
+    "challenge_0": "Slowly move your face to the center.",
+    "challenge_out": "Watch out, your face is too far in the specified direction.\nMove slightly back.",
     "challenge_1": "Slowly move your face up\nand hold still.",
+    "challenge_12": "Watch out, you are looking diagonally upwards.\nSlowly move your face upwards and hold still.",
+    "challenge_14": "Watch out, you are looking diagonally upwards.\nSlowly move your face upwards and hold still.",
     "challenge_2": "Slowly move your face to the right\nand hold still.",
+    "challenge_21": "Watch out, you are looking diagonally upwards.\nSlowly move your face to the right and hold still.",
+    "challenge_23": "Watch out, you are looking diagonally downwards.\nSlowly move your face to the right and hold still.",
     "challenge_3": "Slowly move your face down\nand hold still.",
-    "challenge_4": "Slowly move your face to the left\nand hold still."
+    "challenge_32": "Watch out, you are looking diagonally downwards.\nSlowly move your face downwards and hold still.",
+    "challenge_34": "Watch out, you are looking diagonally downwards.\nSlowly move your face downwards and hold still.",
+    "challenge_4": "Slowly move your face to the left\nand hold still.",
+    "challenge_41": "Watch out, you are looking diagonally upwards.\nSlowly move your face to the left and hold still.",
+    "challenge_43": "Watch out, you are looking diagonally downwards.\nSlowly move your face to the left and hold still."
 }
 ```
 
@@ -310,3 +343,13 @@ Example:
 - iOS 15 bug fix.
 - Increased oval frame size.
 - How far you can turn your face is now a limit.
+
+## *CHANGES* v1.3.4
+
+- Renamed `global.css` to `faceverify.css`
+- Root of files can now be configured. (see [Configuration](#configuration))
+- Added onUserExit functionality. (see [Configuration](#configuration), [Handling callbacks](#handling-callbacks))
+- `Tap to start` on screen is replaced with a button.
+- Moved example `index.html` to `html/examples`.
+- Refactored README tables.
+- Added iOS integration documentation at `ios/`.

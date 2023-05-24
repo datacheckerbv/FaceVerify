@@ -37,6 +37,11 @@ html {
     top: 0px;
 }
 
+.center {
+    justify-content: center;
+    align-items: center;
+}
+
 #videoContainer {
     width: 100%;
     height: 100%;
@@ -49,7 +54,6 @@ html {
     display: flex;
     height: 100px;
     width: 100%;
-    z-index: 1003;
     position: absolute;
     flex-direction: column;
     top:3%;
@@ -297,6 +301,110 @@ html {
     animation-name: cross;
 }
 
+.exit {
+    position: absolute;
+    left: 20px;
+    top: 3%;
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+  }
+  .exit:before, .exit:after {
+    position: absolute;
+    left: 10px;
+    content: ' ';
+    height: 20px;
+    width: 2px;
+    background-color: #ffffff;
+  }
+  .exit:before {
+    transform: rotate(45deg);
+  }
+  .exit:after {
+    transform: rotate(-45deg);
+  }
+
+  button {
+    display: inline-block;
+    color: #fff;
+    background-color: #6cbd45;
+    border-color: #6cbd45;
+    padding: 6px 12px;
+    margin: 3px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+button[disabled] {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
+
+  /* CSS for the round capture button */
+  .capture-button {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid white;
+    position: relative;
+  }
+
+  .capture-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 50%;
+  }
+
+  .capture-button:active::after {
+    width: 45px;
+    height: 45px;
+  }
+
+  #capture-button-container {
+    display: none;
+    position: absolute;
+    bottom: 75px;
+    width: 100%;
+  }
+
+  #capture-button-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  #start-button-container {
+    display: none;
+  }
+
+  #start-button {
+    background-color: #1d3461
+  }
+  
+
 @keyframes checkmark {
     0% {
         height: 0;
@@ -344,11 +452,11 @@ html {
 }
 
 #footer_container {
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     width: 100%;
     position: absolute;
-    top: 0;
+    bottom: 0;
 }
 #footer {
     align-self: flex-end;
