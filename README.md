@@ -292,6 +292,7 @@ The SDK will output in the following structure:
 ```json
 {   
     "livePhotos": ["base64_img1", "..."],
+    "meta": [{"x":"", "y":"", "width":"", "height":""}, "..."],
     "token": "base64_token",
     "valid_challenges": "true|false"
 }
@@ -302,6 +303,7 @@ Example:
 ```json
 {   
     "livePhotos": ["/9j/4AAQSkZJRgABAQAAAQABAAD/...", "/9j/4AAQSkZJRgABAQAAAQABAAD/...", "/9j/4AAQSkZJRgABAQAAAQABAAD/..."],
+    "meta": [{"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}],
     "token": "eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ==",
     "valid_challenges": true
 }
@@ -353,3 +355,4 @@ Example:
 - Moved example `index.html` to `html/examples`.
 - Refactored README tables.
 - Added iOS integration documentation at `ios/`.
+- Added ROI meta information in output. This can be used for cropping the face. (see [Output](#output))
