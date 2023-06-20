@@ -48,15 +48,39 @@ html {
     position: relative;
 }
 
+#taskContainer {
+    align-items: center;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+}
+
+#taskBox {
+    z-index: inherit;
+    justify-content: center;
+    display: none;
+    text-align: center;
+    align-items: center;
+    border-radius: 0.25em;
+    color: white;
+    /* background-color: rgba(0, 0, 0, 0.4); */
+    padding: 0.05em 0.3em 0.05em 0.3em;
+    font-size: 26px;
+    line-height: 1em;
+    height: 10%;
+    margin: 0.5em 0;
+    max-width: 80%;
+}
 
 #alertContainer {
     align-items: center;
     display: flex;
-    height: 100px;
+    height: 100%;
     width: 100%;
-    position: absolute;
+    justify-content: center;
     flex-direction: column;
-    top:3%;
+    line-height: 1em;
+    /* margin-bottom: 50px; */
 }
 
 #alertBox {
@@ -68,7 +92,23 @@ html {
     border-radius: 0.25em;
     color: white;
     background-color: rgba(0, 0, 0, 0.4);
-    padding: 0.05em 0.3em 0.05em 0.3em;
+    padding: 6px;
+    font-size: 26px;
+    line-height: 1em;
+    margin: 10px;
+    max-width: 90%;
+}
+
+.fixed {
+    position: absolute;
+}
+
+.hidden {
+    display: none;
+}
+
+.icon {
+    width: 50px
 }
 
 #countdownBox {
@@ -85,7 +125,7 @@ html {
 #arrow_container {
     justify-content: center;
     align-items: center;
-    display: none;
+    display: flex;
 }
 
 #arrow_svg {
@@ -122,7 +162,7 @@ html {
 
 #roi_border {
     fill: none;
-    stroke-width: 5;
+    stroke-width: 15;
     stroke: white;
 }
 
@@ -401,7 +441,16 @@ button[disabled] {
   }
 
   #start-button {
-    background-color: #1d3461
+    font: 400 14px/22px Roboto,sans-serif;
+    font-size: 30px;
+    width: 100%;
+    position: absolute;
+    color: white;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5em 0;
   }
   
 
