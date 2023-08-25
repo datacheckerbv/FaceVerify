@@ -28,29 +28,28 @@ The movement check will only be used for the second picture. Since the first pic
 
 To run this tool, you will need initialise with the following variables.
 
-| **ATTRIBUTE**            | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                                                                                              | **NOTES**                                                                                                                                              |
-| ------------------------ | ------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `BACKEND`                | string              | `wasm`                                 | `wasm`                                                                                                   | **optional**<br> Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended. |
-| `CAPTURE_CHALLENGE_SETS` | bool                | `true`                                 | `true`                                                                                                   | **optional**<br> Capture second picture after initial challenge is captured. By setting this to `true` liveness detection is improved.                 |
-| `CAPTURE_WAITING_TIME`   | int                 | `500`                                  | `500`                                                                                                    | **optional**<br> Waiting time between capturing in milliseconds.                                                                                       |
-| `CHALLENGES`             | array               |                                        | `['up', 'right', 'down', 'left', 'up']`                                                                  | **optional**<br> Array of `challenges` that can be used for Demo purposes.                                                                             |
-| `CONTAINER_ID`           | string              |                                        | `"FV_mount"`                                                                                             | **required**<br> *div id* to mount tool on.                                                                                                            |
-| `COUNTDOWN_MAX`          | int                 | `500`                                  | `500`                                                                                                    | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                      |
-| `COUNTDOWN_MIN`          | int                 | `0`                                    | `0`                                                                                                      | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                      |
-| `COUNTDOWN`              | int                 | `0`                                    | `3000`                                                                                                   | **optional**<br> Countdown in ms before picture is taken.                                                                                              |
-| `DOWN_THRESHOLD`         | int                 | `30`                                   | `30`                                                                                                     | **optional**<br> Challenge `down` threshold value.                                                                                                     |
-| `LANGUAGE`               | string              | `"nl"`                                 | `"nl"`                                                                                                   | **required**<br> Notifications in specific language.                                                                                                   |
-| `LEFT_THRESHOLD`         | int                 | `22`                                   | `22`                                                                                                     | **optional**<br> Challenge `left` threshold value.                                                                                                     |
-| `MODELS_PATH`            | string              | `"models/"`                            | `"models/"`                                                                                              | **optional**<br> Path referring to models location.                                                                                                    |
-| `MOVEMENT_THRESHOLD`     | int                 | `20`                                   | `20`                                                                                                     | **optional**<br> Movement will be calculated from frame to frame with a value between 0-100. Recommended value between 20 and 30.                      |
-| `RIGHT_THRESHOLD`        | int                 | `22`                                   | `22`                                                                                                     | **optional**<br> Challenge `right` threshold value.                                                                                                    |
-| `ROOT`                   | string              | `""`                                   | `"../"`                                                                                                  | **optional**<br> Root location.                                                                                                                        |
-| `STOP_AFTER`             | int                 |                                        | `10000`                                                                                                  | **optional**<br> Stopping timer in ms.                                                                                                                 |
-| `TOKEN`                  | string              |                                        | `"eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ=="` | **required**<br> *base64 token* string containing *challenges* and *transaction id*.                                                                   |
-| `UP_THRESHOLD`           | int                 | `35`                                   | `35`                                                                                                     | **optional**<br> Challenge `up` threshold value.                                                                                                       |
-| `onComplete`             | javascript function |                                        | `function(data) {console.log(data)}`                                                                     | **required**<br> Callback function on *complete* .                                                                                                     |
-| `onError`                | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`                                                                   | **optional**<br> Callback function on *error*.                                                                                                         |
-| `onUserExit`             | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}`                                                                | **optional**<br> Callback function on *user exit*.                                                                                                     |
+| **ATTRIBUTE**          | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                               | **NOTES**                                                                                                                                              |
+| ---------------------- | ------------------- | -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `BACKEND`              | string              | `wasm`                                 | `wasm`                                    | **optional**<br> Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended. |
+| `CAPTURE_WAITING_TIME` | int                 | `0`                                    | `500`                                     | **optional**<br> Waiting time between capturing in milliseconds.                                                                                       |
+| `CHALLENGES`           | array               |                                        | `['up', 'right', 'down', 'left', 'up']`   | **optional**<br> Array of `challenges` that can be used for Demo purposes.                                                                             |
+| `CONTAINER_ID`         | string              |                                        | `"FV_mount"`                              | **required**<br> _div id_ to mount tool on.                                                                                                            |
+| `COUNTDOWN_MAX`        | int                 | `0`                                    | `500`                                     | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                      |
+| `COUNTDOWN_MIN`        | int                 | `0`                                    | `0`                                       | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                      |
+| `COUNTDOWN`            | int                 | `0`                                    | `3000`                                    | **optional**<br> Countdown in ms before picture is taken.                                                                                              |
+| `DOWN_THRESHOLD`       | int                 | `30`                                   | `30`                                      | **optional**<br> Challenge `down` threshold value.                                                                                                     |
+| `LANGUAGE`             | string              | `"nl"`                                 | `"nl"`                                    | **required**<br> Notifications in specific language.                                                                                                   |
+| `LEFT_THRESHOLD`       | int                 | `22`                                   | `22`                                      | **optional**<br> Challenge `left` threshold value.                                                                                                     |
+| `MODELS_PATH`          | string              | `"models/"`                            | `"models/"`                               | **optional**<br> Path referring to models location.                                                                                                    |
+| `MOVEMENT_THRESHOLD`   | int                 | `20`                                   | `20`                                      | **optional**<br> Movement will be calculated from frame to frame with a value between 0-100. Recommended value between 20 and 30.                      |
+| `RIGHT_THRESHOLD`      | int                 | `22`                                   | `22`                                      | **optional**<br> Challenge `right` threshold value.                                                                                                    |
+| `ROOT`                 | string              | `""`                                   | `"../"`                                   | **optional**<br> Root location.                                                                                                                        |
+| `STOP_AFTER`           | int                 |                                        | `10000`                                   | **optional**<br> Stopping timer in ms.                                                                                                                 |
+| `TOKEN`                | string              |                                        | see [Token](#token)                       | **required**<br> Datachecker SDK token.                                                                                                                |
+| `UP_THRESHOLD`         | int                 | `35`                                   | `35`                                      | **optional**<br> Challenge `up` threshold value.                                                                                                       |
+| `onComplete`           | javascript function |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback function on _complete_ .                                                                                                     |
+| `onError`              | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **optional**<br> Callback function on _error_.                                                                                                         |
+| `onUserExit`           | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **optional**<br> Callback function on _user exit_.                                                                                                     |
 
 ## Handling callbacks
 
@@ -75,11 +74,11 @@ FV.init({
 });
 ```
 
-| **ATTRIBUTE**            | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                                                                                              | **NOTES**                                                                                                                                              |
-| ------------------------ | ------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `onComplete`             | javascript function |                                        | `function(data) {console.log(data)}`                                                                     | **required**<br> Callback that fires when all interactive tasks in the workflow have been completed.                                                                                                     |
-| `onError`                | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`                                                                   | **optional**<br> Callback that fires when an *error* occurs.                                                                                                         |
-| `onUserExit`             | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}`                                                                | **optional**<br> Callback that fires when the user exits the flow without completing it.                                                                                                     |
+| **ATTRIBUTE** | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                               | **NOTES**                                                                                            |
+| ------------- | ------------------- | -------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `onComplete`  | javascript function |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback that fires when all interactive tasks in the workflow have been completed. |
+| `onError`     | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **optional**<br> Callback that fires when an _error_ occurs.                                         |
+| `onUserExit`  | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **optional**<br> Callback that fires when the user exits the flow without completing it.             |
 
 ## Usage/Examples
 
@@ -176,7 +175,7 @@ File present under `html/index.html`
     FV.init({
         CONTAINER_ID: 'FV_mount',
         LANGUAGE: 'en',
-        TOKEN:"eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ==",
+        TOKEN: "<SDK_TOKEN>",
         onComplete: function(data) {
             console.log(data)
             FV.stop();
@@ -281,7 +280,7 @@ let FV = new FaceVerify();
 FV.init({
     CONTAINER_ID: 'FV_mount',
     LANGUAGE: 'nl',
-    TOKEN: "eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ==",
+    TOKEN: "<SDK_TOKEN>",
     ...
 ```
 
@@ -291,9 +290,14 @@ The SDK will output in the following structure:
 
 ```json
 {   
-    "livePhotos": ["base64_img1", "..."],
+    "images": [
+      {
+        "data":"base64_img1",
+        "type": "LIVE"
+      }, 
+    ],
     "meta": [{"x":"", "y":"", "width":"", "height":""}, "..."],
-    "token": "base64_token",
+    "token": "<SDK_TOKEN>",
     "valid_challenges": "true|false"
 }
 ```
@@ -302,9 +306,18 @@ Example:
 
 ```json
 {   
-    "livePhotos": ["/9j/4AAQSkZJRgABAQAAAQABAAD/...", "/9j/4AAQSkZJRgABAQAAAQABAAD/...", "/9j/4AAQSkZJRgABAQAAAQABAAD/..."],
+    "images": [
+      {
+        "data": "/9j/4AAQSkZJRgABAQAAAQABAAD/...",
+        "type": "LIVE"
+      }, 
+      {
+        "data": "/9j/4AAQSkZJRgABAQAAAQABAAD/...",
+        "type": "LIVE"
+      }, 
+    ],
     "meta": [{"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}],
-    "token": "eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ==",
+    "token": "<SDK_TOKEN>",
     "valid_challenges": true
 }
 ```
@@ -356,3 +369,37 @@ Example:
 - Refactored README tables.
 - Added iOS integration documentation at `ios/`.
 - Added ROI meta information in output. This can be used for cropping the face. (see [Output](#output))
+
+## *CHANGES* v1.3.5
+
+- Changed default values of `CAPTURE_WAITING_TIME` & `COUNTDOWN_MAX`. (see [Configuration](#configuration))
+- New UI design.
+- *REMOVED* `CAPTURE_CHALLENGE_SETS` is not optional anymore. A set of images will be taken at every challenge. (see [Configuration](#configuration))
+
+## *CHANGES* v2.0.0
+
+**BREAKING CHANGE!**
+
+Please note: The migration from V1 to V2 is a breaking change. The outputs are changed and the SDK is locked with a token.
+
+- Added Token validation. Application can only be started with a valid token.
+- Added Android integration documentation at `android/`.
+- New Tap-to-start screen.
+- Changed output format: (see [Output](#output))
+
+from:
+
+```json
+ "livePhotos": ["base64_img1", "..."],
+```
+
+to:
+
+```json
+"images": [
+    {
+    "data":"base64_img1",
+    "type": "LIVE"
+    }, 
+]
+```
