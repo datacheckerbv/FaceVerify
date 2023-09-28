@@ -19,20 +19,17 @@
     FV.init({
         CONTAINER_ID: 'FV_mount',
         LANGUAGE: 'en',
-        TOKEN: "<SDK_TOKEN>",
+        TOKEN:"eyJpZCI6IjdkYWMxN2IzLWQ2YTktNDhiYi04MzhhLWEzZjA5YTMyY2EwYiIsImNoYWxsZW5nZXMiOlsidXAiLCJyaWdodCJdfQ==",
         ROOT: '../',
         onComplete: function(data) {
             console.log(data)
-            FV.stop();
         },
         onError: function(error) {
             console.log(error)
-            FV.stop();
-            FV.alert(error)
         },
         onUserExit: function(data) {
             console.log(data);
-            FV.stop();
+            window.history.back();
         },
     }).then(() => {
         // Tap to start
