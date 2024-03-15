@@ -1,0 +1,52 @@
+{
+  "name": "@datachecker/faceverify",
+  "version": "v0.0.4",
+  "description": "This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.",
+  "main": "dist/faceverify.obf.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start-server": "http-server -p 3000",
+    "cypress:open": "cypress open --project tests",
+    "cypress:run": "cypress run --project tests",
+    "test:e2e": "npm run start-server & npm run cypress:run",
+    "test": "jest --coverage --config=tests/jest.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datacheckerbv/FaceVerify.git"
+  },
+  "author": "Fabian Afatsawo",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/datacheckerbv/FaceVerify/issues"
+  },
+  "homepage": "https://github.com/datacheckerbv/FaceVerify#readme",
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "babel-jest": "^29.7.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^6.9.1",
+    "cypress": "^13.6.4",
+    "file-loader": "^6.2.0",
+    "http-server": "^14.1.1",
+    "javascript-obfuscator": "^4.1.0",
+    "jest": "^29.7.0",
+    "jest-canvas-mock": "^2.5.2",
+    "jest-environment-jsdom": "^29.7.0",
+    "style-loader": "^3.3.4",
+    "url-loader": "^4.1.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-obfuscator": "^3.5.1",
+    "webpack-shell-plugin-next": "^2.3.1"
+  },
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md"
+  ]
+}

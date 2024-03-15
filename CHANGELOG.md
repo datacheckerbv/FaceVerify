@@ -1,5 +1,28 @@
 # *CHANGELOG*
 
+## *CHANGES* v3.0.0
+
+- Only enable SDK when allowed in token.
+- Added demo token functionality.
+- Restructured codebase. AutoCapture and FaceVerify can now both be loaded in the same page.
+- CSS identifiers renamed.
+- Notications can now be loaded as object (json) in config. (See [Languages](README.md#languages).)
+- Repositioned Task box.
+- Removal of `ROOT`. (see [Configuration](README.md#configuration))
+- Introduction `BACKGROUND_COLOR` to change background color. (see [Configuration](README.md#configuration))
+- Refactored Codebase.
+- Introduction `ASSETS_MODE` and `ASSETS_FOLDER` to fetch assets. (see [Configuration](README.md#configuration))
+- NPM install now available
+- Script tag import, ES6 style import and CommonJS style import. (see [Importing SDK](README.md#importing-sdk))
+- Version control between Assets and Main file. (see [Version control](README.md#version-control))
+- Customizable background color. (see [Configuration](README.md#configuration))
+- Meta tags are now added automatically.
+- Detailed integration examples. (see [Examples](examples/README.md))
+- Decreased package size by removing redundant files.
+
+- Bugfix: Short camera glitch on startup.
+- Bugfix: Wait until opencv is ready.
+
 ## *CHANGES* v2.0.1
 
 - Created [Changelog](#changelog), moved previous logging of changes from [README](README.md) to [Changelog](#changelog).
