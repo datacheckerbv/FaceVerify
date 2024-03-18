@@ -1,5 +1,9 @@
 # *CHANGELOG*
 
+## *CHANGES* v3.0.1
+
+- Bugfix: Fixed an issue where Next.js compilation would fail when certain arrays were not properly populated.
+
 ## *CHANGES* v3.0.0
 
 - Only enable SDK when allowed in token.
