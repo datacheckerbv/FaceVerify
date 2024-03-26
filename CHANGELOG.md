@@ -1,5 +1,9 @@
 # *CHANGELOG*
 
+## *CHANGES* v3.0.2
+
+- Add V3 migration guide
+
 ## *CHANGES* v3.0.1
 
 - Bugfix: Fixed an issue where Next.js compilation would fail when certain arrays were not properly populated.
