@@ -1,5 +1,16 @@
 # *CHANGELOG*
 
+## *CHANGES* v3.1.0
+
+- Decreased size of `faceverify.obf.js` by 8.38 MiB, resulting in faster loading time.
+- Improved UI/UX.
+- Changed notifications. (see [Languages](README.md#languages))
+- Speed upgrade movement calculation.
+- Allow consecutive repetitions of the same challenge.
+- Lowered the threshold of the up-challenge.
+
+- Bugfix: No Camera access native iOS now throws the expected error.
+
 ## *CHANGES* v3.0.2
 
 - Add V3 migration guide

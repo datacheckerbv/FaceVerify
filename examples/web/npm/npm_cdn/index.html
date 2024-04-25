@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+<head>
+<title>FaceVerify</title>
+</head>
+
+<body>
+    <div id="AC_mount"></div>
+</body>
+
+<script type="module">
+    import FaceVerify from "./release/bundle.js"
+
+    let FV = new FaceVerify();
+    FV.init({
+        CONTAINER_ID: 'FV_mount',
+        LANGUAGE: 'en',
+        TOKEN: "<YOUR SDK TOKEN>",
+        ASSETS_MODE: "CDN",
+        onComplete: function (data) {
+            console.log(data)
+        },
+        onError: function(error) {
+            console.log(error)
+        },
+        onUserExit: function () {
+            window.history.back()
+        }
+    })
+</script>
+
+</html>
