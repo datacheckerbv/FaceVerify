@@ -1,5 +1,10 @@
 # *CHANGELOG*
 
+## *CHANGES* v3.1.1
+
+- Bugfix: Fixed an issue where loading the SDK multiple times could cause errors, ensuring reliable repeated initialization.
+- Bugfix: onError callback always caused a blank alert screen.
+
 ## *CHANGES* v3.1.0
 
 - Decreased size of `faceverify.obf.js` by 8.38 MiB, resulting in faster loading time.
