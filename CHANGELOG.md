@@ -1,5 +1,14 @@
 # *CHANGELOG*
 
+## *CHANGES* v3.1.2
+
+- **Optimized `opencv.js` Size**: Reduced the size of `opencv.js`, resulting in faster loading times.
+- **Added SIMD Support**: `opencv.js` now supports SIMD (Single Instruction, Multiple Data) for enhanced performance.
+- **Updated Compatibility Requirements**: The SDK requires at least ECMAScript 12 (ES12). Please refer to the [Compatibility](README.md#compatibility) section for more details.
+- **WebGL Frame Reading**: Implemented WebGL frame reading for improved performance.
+- **Efficiency Improvements**: Made minor efficiency fixes, leading to a smoother process.
+- **Challenge-Response Sensitivity**: Stabilized challenge-response sensitivity for better reliability.
+
 ## *CHANGES* v3.1.1
 
 - Bugfix: Fixed an issue where loading the SDK multiple times could cause errors, ensuring reliable repeated initialization.

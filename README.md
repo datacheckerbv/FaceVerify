@@ -31,6 +31,12 @@ Please visit [Datachecker API documentation](https://developer.datachecker.nl/).
 - Datachecker [OAuth Token](#oauth-token)
 - Datachecker [SDK Token](#sdk-token)
 
+## Compatibility
+
+The SDK requires a browser that supports at least ECMAScript 12 (ES12). It is highly recommended to use the latest version of your preferred browser to ensure compatibility and access to the latest features and security updates.
+
+Using the latest browser versions will ensure that all modern JavaScript features required by the SDK are supported.
+
 ## Steps
 
 1. Request [OAUTH Token](#oauth-token)
