@@ -1,5 +1,10 @@
 # *CHANGELOG*
 
+## *CHANGES* v4.0.0
+
+- **Enhanced Debugging Tools**: Improved tools for easier debugging and troubleshooting.
+- **Enhanced Security**: Implemented additional security measures.
+
 ## *CHANGES* v3.1.2
 
 - **Optimized `opencv.js` Size**: Reduced the size of `opencv.js`, resulting in faster loading times.
