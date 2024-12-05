@@ -1,7 +1,8 @@
 # *CHANGELOG*
 
-## *CHANGES* v4.0.1
+## *CHANGES* v4.0.2
 
+- **Version number display**: The version number is now visible on the screen, providing users with clear information about the current version of the application.
 - **Bugfix**: Fixed an issue that caused checkmark or cross icons to not be displayed.
 
 ## *CHANGES* v4.0.0
