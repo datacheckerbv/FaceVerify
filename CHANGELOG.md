@@ -1,5 +1,9 @@
 # *CHANGELOG*
 
+## *CHANGES* v4.0.1
+
+- **Bugfix**: Fixed an issue that caused checkmark or cross icons to not be displayed.
+
 ## *CHANGES* v4.0.0
 
 - **Enhanced Debugging Tools**: Improved tools for easier debugging and troubleshooting.
