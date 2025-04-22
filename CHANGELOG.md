@@ -1,5 +1,9 @@
 # *CHANGELOG*
 
+## *CHANGES* v4.1.0
+
+- **Initial Center Position Check**: Added validation to ensure users are correctly centered before challenge sequence begins.
+
 ## *CHANGES* v4.0.2
 
 - **Version number display**: The version number is now visible on the screen, providing users with clear information about the current version of the application.
