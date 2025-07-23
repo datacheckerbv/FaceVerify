@@ -1,5 +1,11 @@
 # *CHANGELOG*
 
+## *CHANGES* v5.0.0
+
+- **New FaceDetector Engine**: Face detection now uses the Mediapipe Task Vision package, delivering improved accuracy and performance.  
+    This update addresses the Samsung S25 compatibility issue ([issue #5867](https://github.com/google-ai-edge/mediapipe/issues/5867), [issue #5908](https://github.com/google-ai-edge/mediapipe/issues/5908)) reported on the Mediapipe GitHub repository.
+- **Default Runtime Changed to CPU**: The default runtime for face detection is now CPU (was GPU). This change improves compatibility with the Samsung S25 and other devices that may not work reliably with GPU.
+
 ## *CHANGES* v4.1.0
 
 - **Initial Center Position Check**: Added validation to ensure users are correctly centered before challenge sequence begins.
