@@ -1,6 +1,8 @@
 
 # FaceVerify
 
+> **📢 Upgrading from v5.x?** See the [Migration Guide v6](migration_guide_v6.md) for breaking changes.
+
 This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.
 
 To perform liveness detection, two slightly different images of the same person are required. For example, when a person moves his/her head slightly this will generate a different image. Therefore, the tool checks difference in movement between frames.
@@ -99,30 +101,19 @@ fetch(<BASE_ENDPOINT>+"/sdk/token?number_of_challenges=2&customer_reference=<CUS
 
 ## Configuration
 
+> **Note:** Version 6.0.0 removed several deprecated configuration options (`BACKEND`, `CHALLENGES`, `COUNTDOWN`, `CAPTURE_WAITING_TIME`, individual thresholds, etc.). See the [Migration Guide v6](migration_guide_v6.md) for details.
+
 To run this tool, you will need initialise with the following variables.
 
 | **ATTRIBUTE**          | **FORMAT**              | **DEFAULT VALUE**                      | **EXAMPLE**                               | **NOTES**                                                                                                                                                           |
 | ---------------------- | ----------------------- | -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ASSETS_FOLDER`        | string                  | `""`                                   | `"../"`                                   | **optional**<br> Specifies location of **locally hosted** assets folder. (see [Asset Fetching Configuration](#asset-fetching-configuration))                        |
 | `ASSETS_MODE`          | string                  | `"CDN"`                                | `"LOCAL"`                                 | **optional**<br> Specifies mode of asset fetching, either through CDN or locally hosted assets. (see [Asset Fetching Configuration](#asset-fetching-configuration)) |
-| `BACKEND`              | string                  | `wasm`                                 | `wasm`                                    | **optional**<br> Neural network execution provider. Possible values: [`wasm`, `webgl`, `cpu`]. `wasm` is recommended whereas `cpu` is not recommended.              |
 | `BACKGROUND_COLOR`     | string (Hex color code) | `"#1d3461"`                            | `"#1d3461"`                               | **optional**<br> Specifies the background color using a hex color code.                                                                                             |
-| `CAPTURE_WAITING_TIME` | int                     | `0`                                    | `500`                                     | **optional**<br> Waiting time between capturing in milliseconds.                                                                                                    |
-| `CHALLENGES`           | array                   |                                        | `['up', 'right', 'down', 'left', 'up']`   | **optional**<br> Array of `challenges` that can be used for Demo purposes.                                                                                          |
 | `CONTAINER_ID`         | string                  |                                        | `"FV_mount"`                              | **required**<br> _div id_ to mount tool on.                                                                                                                         |
-| `COUNTDOWN_MAX`        | int                     | `0`                                    | `500`                                     | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                                   |
-| `COUNTDOWN_MIN`        | int                     | `0`                                    | `0`                                       | **optional**<br> If `COUNTDOWN == 0` then countdown will be a random between `COUNTDOWN_MIN` and `COUNTDOWN_MAX`.                                                   |
-| `COUNTDOWN`            | int                     | `0`                                    | `3000`                                    | **optional**<br> Countdown in ms before picture is taken.                                                                                                           |
 | `DEBUG`                | bool                    | `false`                                | `false`                                   | **optional**<br> When debug is `true` more detailed logs will be visible.                                                                                           |
-| `DOWN_THRESHOLD`       | int                     | `30`                                   | `30`                                      | **optional**<br> Challenge `down` threshold value.                                                                                                                  |
 | `LANGUAGE`             | string                  | `"nl"`                                 | `"nl"`                                    | **required**<br> Notifications in specific language.                                                                                                                |
-| `LEFT_THRESHOLD`       | int                     | `22`                                   | `22`                                      | **optional**<br> Challenge `left` threshold value.                                                                                                                  |
-| `MODELS_PATH`          | string                  | `"models/"`                            | `"models/"`                               | **optional**<br> Path referring to models location.                                                                                                                 |
-| `MOVEMENT_THRESHOLD`   | int                     | `20`                                   | `20`                                      | **optional**<br> Movement will be calculated from frame to frame with a value between 0-100. Recommended value between 20 and 30.                                   |
-| `RIGHT_THRESHOLD`      | int                     | `22`                                   | `22`                                      | **optional**<br> Challenge `right` threshold value.                                                                                                                 |
-| `STOP_AFTER`           | int                     |                                        | `10000`                                   | **optional**<br> Stopping timer in ms.                                                                                                                              |
 | `TOKEN`                | string                  |                                        | see [SDK Token](#sdk-token)               | **required**<br> Datachecker SDK token.                                                                                                                             |
-| `UP_THRESHOLD`         | int                     | `35`                                   | `35`                                      | **optional**<br> Challenge `up` threshold value.                                                                                                                    |
 | `onComplete`           | javascript function     |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback function on _complete_ .                                                                                                                  |
 | `onError`              | javascript function     | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **required**<br> Callback function on _error_.                                                                                                                      |
 | `onUserExit`           | javascript function     | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **required**<br> Callback function on _user exit_.                                                                                                                  |
@@ -160,7 +151,7 @@ Then, configure the tool to use these local assets:
 }
 ```
 
-For comphrehensive integration examples, please refer to our [Integration Examples](examples/README.md).
+For comprehensive integration examples, please refer to our [Integration Examples](examples/README.md).
 
 ### Version Control
 
@@ -216,7 +207,7 @@ FV.init({
     ...,
     onComplete: function(data) {
         console.log(data);
-        FV.stop();
+        // FV.stop() is called automatically - no need to call it here
     }
 });
 ```
@@ -277,12 +268,17 @@ FV.init({
 });
 ```
 
-To stop the camera and delete the container with its contents the `stop` function can be called. This function will automatically be called within `onComplete`, `onError` and `onUserExit` thus do not have to be called within your own custom versions of these functions.
+### Cleanup and Removal
+
+The SDK automatically cleans up resources (stops the camera and removes UI elements) when the `onComplete`, `onError`, or `onUserExit` callbacks are triggered.
+
+If you need to completely remove the SDK instance and its container from the DOM (e.g., when unmounting a component or navigating away), use the `remove()` method:
 
 ```javascript
-...
-FV.stop();
+FV.remove();
 ```
+
+This will stop all SDK processes and remove the entire container from the page. This is particularly useful in Single Page Applications (SPAs) or when you need to reinitialize the SDK later.
 
 Example below:
 
@@ -446,12 +442,13 @@ FV.init({
 
 ## Models
 
-The tool uses a collection of neural networks. Make sure that you host the full directory so the models can be accessed. The models path can be configured. (see [Configuration](#configuration))
-The models are located under `models/`. Model cards can also be found in this directory.
+The tool uses a collection of neural networks located in the `assets/` directory.
+
+**Asset Configuration:** Models are part of the assets and can be fetched via CDN (default) or hosted locally. See [Asset Fetching Configuration](#asset-fetching-configuration) for details.
 
 ## Challenges
 
-User challenges are implemented, in order to prevent video injection attacks. These challenges are randomly chosen and thereby, processes are different from one another. The challenges consist of *head pose estimation*. The performed head poses with be compared with the challenges and that result will be returned as bool in `output`. (see [Output](#output))
+User challenges are implemented to prevent video injection attacks. These challenges are randomly chosen and thereby, processes are different from one another. The challenges consist of *head pose estimation*. The performed head poses will be compared with the challenges and that result will be returned as bool in `output`. (see [Output](#output))
 
 There are four poses that will be detected:
 
@@ -460,16 +457,21 @@ There are four poses that will be detected:
 - down
 - left
 
-Challenges are embedded in the `TOKEN`. Therefore, the challenges are not directly visible.
+**Challenges are managed exclusively through the SDK token.** Specify the number of challenges when requesting your SDK token:
 
 ```javascript
-let FV = new FaceVerify();
-FV.init({
-    CONTAINER_ID: 'FV_mount',
-    LANGUAGE: 'nl',
-    TOKEN: "<SDK_TOKEN>",
-    ...
+fetch(BASE_ENDPOINT + "/sdk/token?number_of_challenges=2&customer_reference=<CUSTOMER>&validateWatermark=true&services=FACE_VERIFY", {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer <ACCESSTOKEN>`
+    }
+})
+.then(response => response.json())
 ```
+
+The challenges are embedded in the `TOKEN` and are not directly configurable in the SDK initialization.
 
 ## Output
 

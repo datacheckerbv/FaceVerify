@@ -1,5 +1,35 @@
 # *CHANGELOG*
 
+## *CHANGES* v6.0.1
+
+- **Add Migration Guide**: Added the correct migration guide for migrating to version 6 of this package.
+
+## *CHANGES* v6.0.0
+
+- **Removed Deprecated Configuration Options**: Removed the following configuration options that were either non-functional or no longer needed:
+  - `BACKEND`: Neural network execution provider configuration (was defaulted to WASM internally)
+  - `CAPTURE_WAITING_TIME`: Waiting time between captures (no longer needed with improved capture logic)
+  - `CHALLENGES`: Array of challenges (challenges are now exclusively managed through SDK tokens)
+  - `COUNTDOWN`, `COUNTDOWN_MAX`, `COUNTDOWN_MIN`: Countdown timer configuration (removed in favor of instant capture)
+  - `DOWN_THRESHOLD`, `UP_THRESHOLD`, `LEFT_THRESHOLD`, `RIGHT_THRESHOLD`: Individual challenge thresholds (now managed internally with optimized defaults)
+  - `MODELS_PATH`: Path to models location (replaced by `ASSETS_FOLDER`)
+  - `MOVEMENT_THRESHOLD`: Movement detection threshold (now managed internally)
+  - `STOP_AFTER`: Stopping timer functionality (no longer needed)
+  - `OCCLUSION_MEDIAPIPE`: Occlusion detection mode (now always enabled for MediaPipe)
+
+- **Simplified Configuration**: The SDK configuration is now cleaner and easier to use, focusing only on essential user-facing settings. Internal optimization parameters are now handled automatically.
+
+- **Improved Internal Architecture**:
+  - Challenges and transaction IDs are now managed at the core level rather than in settings
+  - Countdown/timer functionality has been removed for a more streamlined capture experience
+  - Better separation of concerns between public API and internal implementation
+
+- **Documentation Improvements**:
+  - Added "Cleanup and Removal" section documenting the `remove()` method for proper SDK cleanup
+  - Clarified automatic resource cleanup in callbacks
+
+- **Breaking Changes**: Applications using any of the removed configuration options will need to be updated. See the [Migration Guide v6](migration_guide_v6.md) for detailed upgrade instructions.
+
 ## *CHANGES* v5.0.0
 
 - **New FaceDetector Engine**: Face detection now uses the Mediapipe Task Vision package, delivering improved accuracy and performance.  
