@@ -1,5 +1,9 @@
 # *CHANGELOG*
 
+## *CHANGES* v6.1.0
+
+- **Consecutive Same Challenges Allowed**: The SDK now allows consecutive identical challenges in the challenge sequence. This change provides greater flexibility in challenge design and can enhance security by allowing repeated movements.
+
 ## *CHANGES* v6.0.1
 
 - **Add Migration Guide**: Added the correct migration guide for migrating to version 6 of this package.

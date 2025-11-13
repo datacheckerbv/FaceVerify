@@ -1,6 +1,6 @@
 {
   "name": "@datachecker/faceverify",
-  "version": "v6.0.1",
+  "version": "v6.1.0",
   "description": "This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.",
   "main": "dist/faceverify.obf.js",
   "directories": {
