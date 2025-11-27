@@ -105,18 +105,19 @@ fetch(<BASE_ENDPOINT>+"/sdk/token?number_of_challenges=2&customer_reference=<CUS
 
 To run this tool, you will need initialise with the following variables.
 
-| **ATTRIBUTE**          | **FORMAT**              | **DEFAULT VALUE**                      | **EXAMPLE**                               | **NOTES**                                                                                                                                                           |
-| ---------------------- | ----------------------- | -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ASSETS_FOLDER`        | string                  | `""`                                   | `"../"`                                   | **optional**<br> Specifies location of **locally hosted** assets folder. (see [Asset Fetching Configuration](#asset-fetching-configuration))                        |
-| `ASSETS_MODE`          | string                  | `"CDN"`                                | `"LOCAL"`                                 | **optional**<br> Specifies mode of asset fetching, either through CDN or locally hosted assets. (see [Asset Fetching Configuration](#asset-fetching-configuration)) |
-| `BACKGROUND_COLOR`     | string (Hex color code) | `"#1d3461"`                            | `"#1d3461"`                               | **optional**<br> Specifies the background color using a hex color code.                                                                                             |
-| `CONTAINER_ID`         | string                  |                                        | `"FV_mount"`                              | **required**<br> _div id_ to mount tool on.                                                                                                                         |
-| `DEBUG`                | bool                    | `false`                                | `false`                                   | **optional**<br> When debug is `true` more detailed logs will be visible.                                                                                           |
-| `LANGUAGE`             | string                  | `"nl"`                                 | `"nl"`                                    | **required**<br> Notifications in specific language.                                                                                                                |
-| `TOKEN`                | string                  |                                        | see [SDK Token](#sdk-token)               | **required**<br> Datachecker SDK token.                                                                                                                             |
-| `onComplete`           | javascript function     |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback function on _complete_ .                                                                                                                  |
-| `onError`              | javascript function     | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **required**<br> Callback function on _error_.                                                                                                                      |
-| `onUserExit`           | javascript function     | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **required**<br> Callback function on _user exit_.                                                                                                                  |
+| **ATTRIBUTE**      | **FORMAT**              | **DEFAULT VALUE**                      | **EXAMPLE**                               | **NOTES**                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------ | ----------------------- | -------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ASSETS_FOLDER`    | string                  | `""`                                   | `"../"`                                   | **optional**<br> Specifies location of **locally hosted** assets folder. (see [Asset Fetching Configuration](#asset-fetching-configuration))                                                                                                                                                                                                                                                                |
+| `ASSETS_MODE`      | string                  | `"CDN"`                                | `"LOCAL"`                                 | **optional**<br> Specifies mode of asset fetching, either through CDN or locally hosted assets. (see [Asset Fetching Configuration](#asset-fetching-configuration))                                                                                                                                                                                                                                         |
+| `BACKGROUND_COLOR` | string (Hex color code) | `"#1d3461"`                            | `"#1d3461"`                               | **optional**<br> Specifies the background color using a hex color code.                                                                                                                                                                                                                                                                                                                                     |
+| `CONTAINER_ID`     | string                  |                                        | `"FV_mount"`                              | **required**<br> _div id_ to mount tool on.                                                                                                                                                                                                                                                                                                                                                                 |
+| `DEBUG`            | bool                    | `false`                                | `false`                                   | **optional**<br> When debug is `true` more detailed logs will be visible.                                                                                                                                                                                                                                                                                                                                   |
+| `DESKTOP_MODE`     | bool                    | `false`                                | `false`                                   | **optional**<br> Enables all cameras for testing/development purposes. **FOR TESTING ONLY - DO NOT USE IN PRODUCTION.** This mode bypasses camera filtering to allow testing on desktop devices, including virtual cameras. Production environments should always use `false` to ensure only front-facing cameras (user) are available, preventing accidental use of back-facing cameras on mobile devices. |
+| `LANGUAGE`         | string                  | `"nl"`                                 | `"nl"`                                    | **required**<br> Notifications in specific language.                                                                                                                                                                                                                                                                                                                                                        |
+| `onComplete`       | javascript function     |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback function on _complete_ .                                                                                                                                                                                                                                                                                                                                                          |
+| `onError`          | javascript function     | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **required**<br> Callback function on _error_.                                                                                                                                                                                                                                                                                                                                                              |
+| `onUserExit`       | javascript function     | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **required**<br> Callback function on _user exit_.                                                                                                                                                                                                                                                                                                                                                          |
+| `TOKEN`            | string                  |                                        | see [SDK Token](#sdk-token)               | **required**<br> Datachecker SDK token.                                                                                                                                                                                                                                                                                                                                                                     |
 
 ## Asset fetching Configuration
 
@@ -479,8 +480,23 @@ The SDK will output in the following structure:
 
 ```json
 {   
-    "images": [{"data":"<BASE64_IMG>", "type":"LIVE"}, "..."],
-    "meta": [{"x":"", "y":"", "width":"", "height":""}, "..."],
+    "images": [
+        {
+            "data":"<BASE64_IMG>", 
+            "type":"LIVE"
+        },
+        "..."
+    ],
+    "meta": [
+        {
+            "x":"", 
+            "y":"", 
+            "width":"", 
+            "height":"", 
+            "device":""
+        },
+        "..."
+    ],
     "token": "<SDK_TOKEN>",
     "transactionId": "<TRANSACTION_ID>",
     "valid_challenges": "true|false"
@@ -491,8 +507,43 @@ Example:
 
 ```json
 {   
-    "images": [{"data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", "type":"LIVE"}, {"data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", "type":"LIVE"}, {"data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", "type":"LIVE"}],
-    "meta": [{"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}],
+    "images": [
+        {
+            "data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", 
+            "type":"LIVE"
+        }, 
+        {
+            "data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", 
+            "type":"LIVE"
+        }, 
+        {
+            "data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", 
+            "type":"LIVE"
+        }
+    ],
+    "meta": [
+        {
+            "x": 33, 
+            "y": 182, 
+            "width": 265, 
+            "height": 354, 
+            "device": "Front camera"
+        }, 
+        {
+            "x": 33, 
+            "y": 182, 
+            "width": 265, 
+            "height": 354, 
+            "device": "Front camera"
+        }, 
+        {
+            "x": 33, 
+            "y": 182, 
+            "width": 265, 
+            "height": 354, 
+            "device": "Front camera"
+        }
+    ],
     "token": "<SDK_TOKEN>",
     "transactionId": "<TRANSACTION_ID>",
     "valid_challenges": true
@@ -507,8 +558,43 @@ Example JS:
 
 ```javascript
 let faceverify_output = {   
-    "images": [{"data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", "type":"LIVE"}, {"data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", "type":"LIVE"}, {"data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", "type":"LIVE"}],
-    "meta": [{"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}, {"x": 33, "y": 182, "width": 265, "height": 354}],
+    "images": [
+        {
+            "data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", 
+            "type":"LIVE"
+        }, 
+        {
+            "data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", 
+            "type":"LIVE"
+        }, 
+        {
+            "data":"/9j/4AAQSkZJRgABAQAAAQABAAD/...", 
+            "type":"LIVE"
+        }
+    ],
+    "meta": [
+        {
+            "x": 33, 
+            "y": 182, 
+            "width": 265, 
+            "height": 354, 
+            "device": "Front camera"
+        }, 
+        {
+            "x": 33, 
+            "y": 182, 
+            "width": 265, 
+            "height": 354, 
+            "device": "Front camera"
+        }, 
+        {
+            "x": 33, 
+            "y": 182, 
+            "width": 265, 
+            "height": 354, 
+            "device": "Front camera"
+        }
+    ],
     "token": "<SDK_TOKEN>",
     "transactionId": "<TRANSACTION_ID>",
     "valid_challenges": true

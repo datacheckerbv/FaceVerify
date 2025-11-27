@@ -1,5 +1,11 @@
 # *CHANGELOG*
 
+## *CHANGES* v6.1.1
+
+- **Enhanced camera selection**: Improved filtering of available cameras to prioritize front-facing devices and exclude virtual or unsupported cameras, ensuring more reliable capture on multi-camera setups. (see `DESKTOP_MODE` in [Configuration](README.md#configuration))
+- **Added device label to output metadata**: The output metadata now includes the label of the active camera device used during capture. This enhancement provides better traceability and context for the captured images, allowing users to identify which camera was utilized in multi-camera setups. The device label can be found in the `device` field of the output metadata. (see [Output](README.md#output))
+- **Infrastructure**: Backend infrastructure updates and improvements to the publishing pipeline.
+
 ## *CHANGES* v6.1.0
 
 - **Consecutive Same Challenges Allowed**: The SDK now allows consecutive identical challenges in the challenge sequence. This change provides greater flexibility in challenge design and can enhance security by allowing repeated movements.
