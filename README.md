@@ -161,6 +161,24 @@ To ensure compatibility:
 - **Separate Asset Versioning**: The assets directory contains a version file, separate from the main file's version.
 - **Compatibility Check**: The main file will perform a version check and throw an error if the versions are incompatible.
 
+## Content Security Policy (CSP)
+
+FaceVerify is designed to work with Content Security Policy (CSP) enabled. The SDK requires specific CSP directives to load assets (e.g., scripts, models, images) and execute WebAssembly for face detection.
+
+### Required CSP Directives
+
+Ensure your CSP policy includes the following directives. Adjust domains based on your environment (e.g., use `https://developer.datachecker.nl` for Datachecker production api).
+
+- `default-src 'self';`
+- `script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval' 'unsafe-inline' blob:;`
+- `style-src 'self' 'unsafe-inline';`
+- `connect-src 'self' https://developer.datachecker.nl https://cdn.jsdelivr.net data:;`
+- `img-src 'self' data: blob: https://cdn.jsdelivr.net;`
+- `worker-src 'self' blob:;`
+- `object-src 'self' blob:;`
+- `frame-src 'self' blob:;`
+- `base-uri 'none';`
+
 ## Handling callbacks
 
 Within the application, you can take advantage of three callback functions to enhance the user experience and manage the flow of your process.

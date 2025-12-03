@@ -1,5 +1,19 @@
 # *CHANGELOG*
 
+## *CHANGES* v6.1.4
+
+- **Infrastructure**: Backend infrastructure updates and improvements to the publishing pipeline.
+
+## *CHANGES* v6.1.3
+
+- **Infrastructure**: Backend infrastructure updates and improvements to the publishing pipeline.
+
+## *CHANGES* v6.1.2
+
+- **Content Security Policy (CSP)**: Added Content Security Policy (CSP) documentation to the README. (see [Content Security Policy (CSP)](README.md#content-security-policy-csp))
+- **Moved ML engine to Worker**: The MediaPipe Face Landmarker engine has been moved to a Web Worker to improve performance and responsiveness. This change ensures that the main thread remains unblocked during face detection operations, leading to a smoother user experience.
+- **Improved tracking stability**: Enhanced the stability of face tracking, reducing jitter and improving the overall reliability of face detection during movement.
+
 ## *CHANGES* v6.1.1
 
 - **Enhanced camera selection**: Improved filtering of available cameras to prioritize front-facing devices and exclude virtual or unsupported cameras, ensuring more reliable capture on multi-camera setups. (see `DESKTOP_MODE` in [Configuration](README.md#configuration))
