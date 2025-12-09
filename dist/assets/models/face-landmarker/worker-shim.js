@@ -1,0 +1,1 @@
+"undefined"==typeof window&&(self.window=self),"undefined"==typeof document&&(self.document={createElement:e=>"canvas"===e&&"undefined"!=typeof OffscreenCanvas?new OffscreenCanvas(1,1):{getContext:()=>null},head:{appendChild:()=>{}},body:{appendChild:()=>{}}}),self.WORKER_SHIM_LOADED=!0;
