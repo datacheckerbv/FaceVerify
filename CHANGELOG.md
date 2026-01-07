@@ -1,5 +1,9 @@
 # *CHANGELOG*
 
+## *CHANGES* v6.1.6
+
+- **Bugfix**: Fixed an issue where the `DESKTOP_MODE` config wasn't configured correctly.
+
 ## *CHANGES* v6.1.5
 
 - **Bugfix**: Fixed an issue where MediaPipe Face Landmarker worker initialization failed on *Chrome* *iOS* with `"can't find variable: document"` error. Added a polyfill for the document object in the worker to ensure compatibility.
