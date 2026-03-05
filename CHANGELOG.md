@@ -1,5 +1,14 @@
 # *CHANGELOG*
 
+## *CHANGES* v6.1.7
+
+- **CSS Scoping**: SDK styles no longer affect the host page.
+- **Alert Stability**: Improved alert handling, repeated alerts no longer flicker and various edge case fixes.
+- **Face Centering**: Improved face centering validation after the first selfie.
+- **Reduced CPU Usage**: Processing is now capped at a maximum of 30 fps, preventing excessive resource usage on high-refresh-rate devices.
+- **Background Pause**: The SDK now automatically pauses when the app is backgrounded, reducing battery drain and heat on mobile devices.
+- **Bug Fixes**: Various stability fixes including error container isolation, improved container initialization, and cleanup improvements.
+
 ## *CHANGES* v6.1.6
 
 - **Bugfix**: Fixed an issue where the `DESKTOP_MODE` config wasn't configured correctly.
