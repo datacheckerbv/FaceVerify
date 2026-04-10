@@ -36,11 +36,9 @@ const FaceVerifyComponent = () => {
         onComplete: function(data) {
           console.log(data);
         },
-        onImage: function(data) {
-          console.log(data);
-        },
         onError: function(error) {
-          console.log(error)
+          // v7: error is { code, stack }
+          console.log(error.code, error.stack);
         },
         onUserExit: function(error) {
           console.log(error);
@@ -76,8 +74,8 @@ declare module '@datachecker/faceverify' {
      ASSETS_MODE?: 'CDN' | 'LOCAL';
      ASSETS_FOLDER?: string;
      onComplete: (data: Output) => void;
-     onError: (error: Error) => void;
-     onUserExit: (error: Error) => void;
+     onError: (error: { code: string; stack: string }) => void;
+     onUserExit: (error: string) => void;
    }
    class FaceVerify {
      constructor();

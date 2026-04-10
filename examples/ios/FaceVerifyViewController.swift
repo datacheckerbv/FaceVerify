@@ -1,44 +1,70 @@
 //
 //  FaceVerifyViewController.swift
-//  Datachecker
+//  Example integration of the FaceVerify Web SDK in iOS using WKWebView.
 //
-//  Created by Fabian Afatsawo on 23/05/2023.
+//  Prerequisites:
+//  - Add LocalFileSchemeHandler.swift to your project (see README.md)
+//  - Add FaceVerify dist/ folder as a folder reference in Xcode
+//  - Add NSCameraUsageDescription to Info.plist
 //
 
 import UIKit
 import WebKit
 
-class FaceVerifyViewController: UIViewController {
-    @IBOutlet var webView: WKWebView!
-    
-    var token: String!
-    private var htmlFileURL: URL!
-    private var assetsUrl: URL!
+class FaceVerifyViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
 
-    
+    private var webView: WKWebView!
+    var token: String = ""
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        htmlFileURL = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist")!
-        assetsUrl = htmlFileURL.deletingLastPathComponent().appendingPathComponent("assets")
+        view.backgroundColor = .black
         setupWebView()
-        webView.loadFileURL(htmlFileURL, allowingReadAccessTo: htmlFileURL.deletingLastPathComponent())
+        loadIndex()
     }
-    
+
+    // MARK: - WebView Setup
+
     private func setupWebView() {
-        // Configures the WKWebView by creating a web configuration, enabling inline media playback,
-        // and setting up the user content controller with message handlers and scripts.
-        // Adds the WKWebView as a subview and sets up its constraints.
-        
-        let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.allowsInlineMediaPlayback = true
-        webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-        webConfiguration.userContentController = configureUserContentController()
-        
-        webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        let cfg = WKWebViewConfiguration()
+
+        // Register custom scheme so fetch() works with local files
+        cfg.setURLSchemeHandler(LocalFileSchemeHandler(), forURLScheme: LocalFileSchemeHandler.customScheme)
+
+        cfg.websiteDataStore = .nonPersistent()
+        cfg.allowsInlineMediaPlayback = true
+        cfg.mediaTypesRequiringUserActionForPlayback = []
+        cfg.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+
+        let ucc = WKUserContentController()
+
+        // Console bridge: forwards JS console.log/warn/error to Xcode console
+        let consoleBridge = """
+        (function(){
+          function safe(arg){
+            try{ return typeof arg==='string'?arg:JSON.stringify(arg); }catch(e){ return String(arg); }
+          }
+          function post(t,m){ try{ window.webkit.messageHandlers.logging.postMessage({type:t,msg:m}); }catch(e){} }
+          var L=console;
+          ['log','warn','error'].forEach(function(k){
+            var orig=L[k];
+            console[k]=function(){ var msg=Array.prototype.map.call(arguments,safe).join(' '); post(k,msg); if(orig)orig.apply(L,arguments); };
+          });
+          window.addEventListener('error',function(e){ post('error',(e.message||'')+' '+(e.error&&e.error.stack||'')); });
+          window.addEventListener('unhandledrejection',function(e){ var r=e.reason; post('error','Promise rejection: '+(r&&r.message||safe(r))); });
+        })();
+        """
+        ucc.addUserScript(WKUserScript(source: consoleBridge, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+
+        ucc.add(self, name: "output")
+        ucc.add(self, name: "logging")
+        cfg.userContentController = ucc
+
+        webView = WKWebView(frame: .zero, configuration: cfg)
         webView.navigationDelegate = self
-        view.addSubview(webView)
-        
+        webView.uiDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(webView)
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.topAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -46,107 +72,102 @@ class FaceVerifyViewController: UIViewController {
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
-    private func configureUserContentController() -> WKUserContentController {
-        // Configures the WKUserContentController with message handlers for logging and custom output.
-        // Also adds a user script for overriding console.log and other console methods.
-        // Returns the configured WKUserContentController.
-        
-        let userContentController = WKUserContentController()
-        userContentController.add(self, name: "output")
-        userContentController.add(LoggingMessageHandler(), name: "logging")
-        userContentController.addUserScript(configureOverrideConsoleScript())
-        return userContentController
-    }
-    
-    private func configureOverrideConsoleScript() -> WKUserScript {
-        // Returns a WKUserScript containing JavaScript code that overrides console.log, console.warn,
-        // console.error, console.debug in the WKWebView and sends log messages to the logging message handler.
-        
-        let overrideConsoleScript = """
-            // JavaScript code for overriding console.log, console.warn, console.error, console.debug
 
-            function log(emoji, type, args) {
-                window.webkit.messageHandlers.logging.postMessage(
-                    `${emoji} JS ${type}: ${Object.values(args)
-                        .map(v => typeof(v) === "undefined" ? "undefined" : typeof(v) === "object" ? JSON.stringify(v) : v.toString())
-                        .map(v => v.substring(0, 3000)) // Limit msg to 3000 chars
-                        .join(", ")}`
-                );
-            }
+    // MARK: - Load SDK
 
-            let originalLog = console.log;
-            let originalWarn = console.warn;
-            let originalError = console.error;
-            let originalDebug = console.debug;
-
-            console.log = function() { log("📗", "log", arguments); originalLog.apply(null, arguments); };
-            console.warn = function() { log("📙", "warning", arguments); originalWarn.apply(null, arguments); };
-            console.error = function() { log("📕", "error", arguments); originalError.apply(null, arguments); };
-            console.debug = function() { log("📘", "debug", arguments); originalDebug.apply(null, arguments); };
-
-            window.addEventListener("error", function(e) {
-                log("💥", "Uncaught", [`${e.message} at ${e.filename}:${e.lineno}:${e.colno}`]);
-            });
-        """
-
-        return WKUserScript(source: overrideConsoleScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-    }
-
-}
-
-extension FaceVerifyViewController: WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        // Handles messages received from JavaScript in the WKWebView.
-        // Logs the received message and dismisses the view controller.
-        
-        guard let dict = message.body as? [String: AnyObject] else {
+    private func loadIndex() {
+        guard let indexURL = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "dist") else {
+            print("❌ FaceVerify index.html not found in dist/")
             return
         }
-        print(dict)
-        dismiss(animated: true, completion: nil)
-    }
-}
 
-extension FaceVerifyViewController: WKNavigationDelegate {
+        // Convert file:// to localfile:// so the scheme handler serves it
+        var components = URLComponents(url: indexURL, resolvingAgainstBaseURL: false)!
+        components.scheme = LocalFileSchemeHandler.customScheme
+
+        guard let customURL = components.url else { return }
+        webView.load(URLRequest(url: customURL))
+    }
+
+    // MARK: - Initialize SDK after page load
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // Called when the WKWebView finishes loading the HTML content.
-        // Executes JavaScript code in the WKWebView to initialize the face detection process,
-        // listen for completion or error events, and send output data back to the native code.
-        
+        guard let distURL = webView.url?.deletingLastPathComponent() else { return }
+        let assetsURL = distURL.appendingPathComponent("assets").absoluteString
+
         let script = """
-            window.FV = new FaceVerify();
-            window.FV.init({
+        (function() {
+            var mount = document.getElementById('FV_mount');
+            if (!mount) { mount = document.createElement('div'); mount.id = 'FV_mount'; document.body.appendChild(mount); }
+
+            function post(type, payload) {
+                try { window.webkit.messageHandlers.output.postMessage(Object.assign({type:type}, payload||{})); } catch(e){}
+            }
+
+            var fv = new FaceVerify();
+            fv.init({
                 CONTAINER_ID: 'FV_mount',
                 LANGUAGE: 'en',
+                TOKEN: '\(token)',
                 ASSETS_MODE: 'LOCAL',
-                ASSETS_FOLDER:"\(assetsUrl!)",
-                TOKEN:"\(token!)",
+                ASSETS_FOLDER: '\(assetsURL)',
                 onComplete: function(data) {
-                    console.log(data);
-                    window.webkit.messageHandlers.output.postMessage(data);
-                    window.FV.stop();
+                    post('complete', { data: data });
                 },
                 onError: function(error) {
-                    console.log(error);
-                    window.FV.stop();
+                    // v7: error is { code, stack }
+                    post('error', { code: error.code, stack: error.stack });
                 },
-                onUserExit: function(error) {
-                    console.log(error);
-                    window.FV.stop();
+                onUserExit: function() {
+                    post('cancel');
                 }
             });
+        })();
         """
-        
+
         webView.evaluateJavaScript(script, completionHandler: nil)
     }
-}
 
-class LoggingMessageHandler: NSObject, WKScriptMessageHandler {
+    // MARK: - Handle SDK callbacks
+
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        // Handles messages received from JavaScript in the WKWebView for logging purposes.
-        // Logs the received message.
-        
-        print(message.body)
+        if message.name == "logging" {
+            if let o = message.body as? [String: Any], let t = o["type"] as? String, let m = o["msg"] as? String {
+                print("FV \(t): \(m)")
+            }
+            return
+        }
+
+        guard let dict = message.body as? [String: Any],
+              let type = dict["type"] as? String else { return }
+
+        switch type {
+        case "complete":
+            let payload = dict["data"]
+            print("✅ FaceVerify complete: \(String(describing: payload))")
+            dismiss(animated: true)
+        case "error":
+            let code = dict["code"] as? String ?? "unknown"
+            let stack = dict["stack"] as? String ?? ""
+            print("❌ FaceVerify error: \(code)\n\(stack)")
+        case "cancel":
+            print("ℹ️ FaceVerify user exit")
+            dismiss(animated: true)
+        default:
+            break
+        }
+    }
+
+    // MARK: - Camera permissions (iOS 15+)
+
+    @available(iOS 15.0, *)
+    func webView(_ webView: WKWebView,
+                 requestMediaCapturePermissionFor origin: WKSecurityOrigin,
+                 initiatedByFrame frame: WKFrameInfo,
+                 type: WKMediaCaptureType,
+                 decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+        let scheme = frame.request.url?.scheme?.lowercased() ?? ""
+        let isLocal = (scheme == "file") || (scheme == LocalFileSchemeHandler.customScheme)
+        decisionHandler(isLocal ? .grant : .prompt)
     }
 }

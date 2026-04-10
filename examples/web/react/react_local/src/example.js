@@ -12,7 +12,8 @@ const Capture = () => {
             console.log(data)
         },
         onError: function(error) {
-            console.log(error)
+            // v7: error is { code, stack }
+            console.log(error.code, error.stack)
         },
         onUserExit: function () {
             window.history.back()

@@ -1,5 +1,15 @@
 # *CHANGELOG*
 
+## *CHANGES* v7.0.0 ⚠️ BREAKING CHANGE
+
+- **Structured Error Codes (Breaking)**: `onError` now receives an object `{ code, stack }` instead of a plain string. The `code` follows the format `category:NNNN` (e.g., `capture_error:4004`). Include both `code` and `stack` when reporting issues to support. See [Error Codes](README.md#error-codes) for the full list of categories and recommended actions. See [Migration Guide v7](docs/migration_guide_v7.md) for upgrade instructions.
+- **Improved Pose Estimation**: Head pose (yaw/pitch) is now estimated using landmark geometry instead of OpenCV solvePnP. The new approach is translation-invariant, requires no OpenCV, and is significantly more stable across different face sizes, lighting conditions, and distances. Challenge thresholds have been recalibrated accordingly.
+- **Improved Stability**: Fixed multiple crashes related to exit timing, external DOM removal, camera stream interruption, WebGL context loss, face detection worker failures, and component loading failures. All errors are now reported through `onError` with structured error codes instead of crashing silently.
+- **Resource Cleanup**: The face detection worker thread is now properly terminated when the SDK stops or is removed. Camera streams are also fully released on error. This prevents resource buildup in single-page applications where the SDK is initialized multiple times.
+- **New Language Keys**: Added 6 new keys for error message categories: `init_error`, `settings_error`, `token_error`, `opencv_error`, `model_error`, `detect_error`. Custom language files should add these keys to provide translated error messages; the SDK falls back to English defaults if they are missing.
+- **3-Channel PNG Output**: Saved images are now converted from BGRA to BGR (3 channels) before encoding to PNG. This reduces image file size by removing the unused alpha channel.
+- **OpenCV reduced**: Reduced OpenCV build size from 10.1 MB to 2.4 MB, resulting in faster load times and lower memory usage.
+
 ## *CHANGES* v6.1.7
 
 - **CSS Scoping**: SDK styles no longer affect the host page.

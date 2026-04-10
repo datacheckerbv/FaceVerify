@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div id="AC_mount"></div>
+    <div id="FV_mount"></div>
 </body>
 
 <script type="module">
@@ -24,7 +24,8 @@
             console.log(data)
         },
         onError: function(error) {
-            console.log(error)
+            // v7: error is { code, stack }
+            console.log(error.code, error.stack)
         },
         onUserExit: function () {
             window.history.back()

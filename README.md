@@ -110,13 +110,13 @@ To run this tool, you will need initialise with the following variables.
 | `ASSETS_FOLDER`    | string                  | `""`                                   | `"../"`                                   | **optional**<br> Specifies location of **locally hosted** assets folder. (see [Asset Fetching Configuration](#asset-fetching-configuration))                                                                                                                                                                                                                                                                |
 | `ASSETS_MODE`      | string                  | `"CDN"`                                | `"LOCAL"`                                 | **optional**<br> Specifies mode of asset fetching, either through CDN or locally hosted assets. (see [Asset Fetching Configuration](#asset-fetching-configuration))                                                                                                                                                                                                                                         |
 | `BACKGROUND_COLOR` | string (Hex color code) | `"#1d3461"`                            | `"#1d3461"`                               | **optional**<br> Specifies the background color using a hex color code.                                                                                                                                                                                                                                                                                                                                     |
-| `CONTAINER_ID`     | string                  |                                        | `"FV_mount"`                              | **required**<br> _div id_ to mount tool on.                                                                                                                                                                                                                                                                                                                                                                 |
+| `CONTAINER_ID`     | string                  |                                        | `"FV_mount"`                              | **required**<br> *div id* to mount tool on.                                                                                                                                                                                                                                                                                                                                                                 |
 | `DEBUG`            | bool                    | `false`                                | `false`                                   | **optional**<br> When debug is `true` more detailed logs will be visible.                                                                                                                                                                                                                                                                                                                                   |
 | `DESKTOP_MODE`     | bool                    | `false`                                | `false`                                   | **optional**<br> Enables all cameras for testing/development purposes. **FOR TESTING ONLY - DO NOT USE IN PRODUCTION.** This mode bypasses camera filtering to allow testing on desktop devices, including virtual cameras. Production environments should always use `false` to ensure only front-facing cameras (user) are available, preventing accidental use of back-facing cameras on mobile devices. |
 | `LANGUAGE`         | string                  | `"nl"`                                 | `"nl"`                                    | **required**<br> Notifications in specific language.                                                                                                                                                                                                                                                                                                                                                        |
-| `onComplete`       | javascript function     |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback function on _complete_ .                                                                                                                                                                                                                                                                                                                                                          |
-| `onError`          | javascript function     | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **required**<br> Callback function on _error_.                                                                                                                                                                                                                                                                                                                                                              |
-| `onUserExit`       | javascript function     | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **required**<br> Callback function on _user exit_.                                                                                                                                                                                                                                                                                                                                                          |
+| `onComplete`       | javascript function     |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback function on *complete*.                                                                                                                                                                                                                                                                                                                                                           |
+| `onError`          | javascript function     | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **required**<br> Callback function on *error*.                                                                                                                                                                                                                                                                                                                                                              |
+| `onUserExit`       | javascript function     | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **required**<br> Callback function on *user exit*.                                                                                                                                                                                                                                                                                                                                                          |
 | `TOKEN`            | string                  |                                        | see [SDK Token](#sdk-token)               | **required**<br> Datachecker SDK token.                                                                                                                                                                                                                                                                                                                                                                     |
 
 ## Asset fetching Configuration
@@ -197,7 +197,7 @@ FV.init({
         console.log(data);
     },
     onError: function(error) {
-        console.log(error)
+        console.error(error.code, error.stack)
     },
     onUserExit: function(error) {
         console.log(error);
@@ -206,11 +206,11 @@ FV.init({
 });
 ```
 
-| **ATTRIBUTE** | **FORMAT**          | **DEFAULT VALUE**                      | **EXAMPLE**                               | **NOTES**                                                                                            |
-| ------------- | ------------------- | -------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `onComplete`  | javascript function |                                        | `function(data) {console.log(data)}`      | **required**<br> Callback that fires when all interactive tasks in the workflow have been completed. |
-| `onError`     | javascript function | `function(error) {console.log(error)}` | `function(error) {console.log(error)}`    | **required**<br> Callback that fires when an _error_ occurs.                                         |
-| `onUserExit`  | javascript function | `function(error) {console.log(error)}` | `function(error) {window.history.back()}` | **required**<br> Callback that fires when the user exits the flow without completing it.             |
+| **ATTRIBUTE** | **FORMAT**          | **DEFAULT VALUE**                           | **EXAMPLE**                                 | **NOTES**                                                                                                               |
+| ------------- | ------------------- | ------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `onComplete`  | javascript function |                                             | `function(data) {console.log(data)}`        | **required**<br> Callback that fires when all interactive tasks in the workflow have been completed.                    |
+| `onError`     | javascript function | `function(error) {console.log(error.code)}` | `function(error) {console.log(error.code)}` | **required**<br> Callback that fires when an error occurs. Receives `{ code, stack }`. See [Error Codes](#error-codes). |
+| `onUserExit`  | javascript function | `function(error) {console.log(error)}`      | `function(error) {window.history.back()}`   | **required**<br> Callback that fires when the user exits the flow without completing it.                                |
 
 ### onComplete
 
@@ -233,18 +233,27 @@ FV.init({
 
 ### onError
 
-This callback can be used to alert users when something goes wrong during the process. This callback function is **required**. The `error` parameter within the function contains information about the specific error encountered, allowing you to log or display error messages for debugging or user guidance. The errors that are thrown are either known or unknown. The known errors can be found within the [Languages](#languages) dictionary. On the other hand, the unknown errors will be thrown as is.  
+This callback fires when an error occurs during the SDK lifecycle. This callback function is **required**. The `error` parameter is an object with two properties:
+
+- **`code`** — A structured error code (e.g., `capture_error:4004`). Use the category prefix to determine the appropriate UI response. See [Error Codes](#error-codes) for the full list of categories.
+- **`stack`** — A stack trace string. Include this when reporting issues to support for faster diagnosis.
 
 Example Web (JS):
-
-Within the example below we are logging the output (`error`) to console.
 
 ```javascript
 let FV = new FaceVerify();
 FV.init({
     ...,
     onError: function(error) {
-        console.log(error)
+        console.error(error.code, error.stack);
+
+        if (error.code.startsWith('capture_error')) {
+            // Camera issue — show retry UI or prompt for camera permission
+        } else if (error.code.startsWith('init_error')) {
+            // Initialization failed — prompt user to refresh the page
+        } else if (error.code.startsWith('detect_error')) {
+            // Face detection failed — prompt user to try again
+        }
     }
 });
 ```
@@ -311,7 +320,7 @@ FV.init({
         console.log(data);
     },
     onError: function(error) {
-        console.log(error)
+        console.error(error.code, error.stack)
     },
     onUserExit: function(error) {
         console.log(error);
@@ -419,6 +428,12 @@ var LANGUAGE = {
     "capture_error": "Camera access is required",
     "challenge_0": "Center your face",
     "challenge_out": "Face too far",
+    "detect_error": "Face detection failed. Please try again.",
+    "init_error": "Initialization failed. Please refresh the page.",
+    "model_error": "Failed to load required resources. Please check your connection.",
+    "opencv_error": "A required component failed to load. Please refresh the page.",
+    "settings_error": "Configuration error. Please contact support.",
+    "token_error": "Authorization failed. Please try again later.",
     "challenge_1": "Look up",
     "challenge_2": "Look right",
     "challenge_3": "Look down",
@@ -458,6 +473,24 @@ FV.init({
     ),
     ...
 ```
+
+## Error Codes
+
+The `onError` callback receives an object `{ code, stack }`. The `code` follows the format `category:NNNN` (e.g., `capture_error:4004`). Use the category prefix to determine the type of error and the appropriate response.
+
+| Category         | Description                                   | Recommended Action                                |
+| ---------------- | --------------------------------------------- | ------------------------------------------------- |
+| `capture_error`  | Camera or processing failure                  | Show camera retry UI or prompt for permission     |
+| `detect_error`   | Face detection failed after repeated attempts | Prompt user to try again or refresh               |
+| `init_error`     | Initialization failed                         | Prompt user to refresh the page                   |
+| `model_error`    | ML model failed to load                       | Check network connection, retry initialization    |
+| `opencv_error`   | Required component failed to load             | Prompt user to refresh or try a different browser |
+| `settings_error` | Invalid configuration or version mismatch     | Verify SDK configuration and assets               |
+| `token_error`    | Token missing, invalid, or not permitted      | Verify token credentials                          |
+
+When reporting issues to support, include both `error.code` and `error.stack` — the numeric identifier in the code and the stack trace allow for precise diagnosis.
+
+The user-facing alert message shown in the SDK overlay is determined by the category prefix, which maps to a key in the [Languages](#languages) dictionary (e.g., `capture_error` maps to the `capture_error` language key). If a custom language file does not include a key for a new category (e.g., `init_error`), the SDK falls back to its built-in English default.
 
 ## Models
 
