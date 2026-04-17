@@ -1,7 +1,7 @@
 
 # FaceVerify
 
-> **📢 Upgrading from v5.x?** See the [Migration Guide v6](migration_guide_v6.md) for breaking changes.
+> **📢 Upgrading from older versions?** See the [Migration Guides](docs/README.md#migration-guides) for breaking changes.
 
 This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.
 
@@ -100,8 +100,6 @@ fetch(<BASE_ENDPOINT>+"/sdk/token?number_of_challenges=2&customer_reference=<CUS
 ```
 
 ## Configuration
-
-> **Note:** Version 6.0.0 removed several deprecated configuration options (`BACKEND`, `CHALLENGES`, `COUNTDOWN`, `CAPTURE_WAITING_TIME`, individual thresholds, etc.). See the [Migration Guide v6](migration_guide_v6.md) for details.
 
 To run this tool, you will need initialise with the following variables.
 

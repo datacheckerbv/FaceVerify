@@ -1,5 +1,10 @@
 # *CHANGELOG*
 
+## *CHANGES* v7.0.1
+
+- **Bug Fix**: Fixed a double-capture issue on desktop where `onComplete` could fire twice due to overlapping frame processing after a tab visibility change.
+- **Fix**: Migration guides were not included in the published package. Moved all documentation into a `docs/` directory and updated packaging to include it. See [Docs](docs/README.md) for migration guides.
+
 ## *CHANGES* v7.0.0 ⚠️ BREAKING CHANGE
 
 - **Structured Error Codes (Breaking)**: `onError` now receives an object `{ code, stack }` instead of a plain string. The `code` follows the format `category:NNNN` (e.g., `capture_error:4004`). Include both `code` and `stack` when reporting issues to support. See [Error Codes](README.md#error-codes) for the full list of categories and recommended actions. See [Migration Guide v7](docs/migration_guide_v7.md) for upgrade instructions.
@@ -79,7 +84,7 @@
   - Added "Cleanup and Removal" section documenting the `remove()` method for proper SDK cleanup
   - Clarified automatic resource cleanup in callbacks
 
-- **Breaking Changes**: Applications using any of the removed configuration options will need to be updated. See the [Migration Guide v6](migration_guide_v6.md) for detailed upgrade instructions.
+- **Breaking Changes**: Applications using any of the removed configuration options will need to be updated. See the [Migration Guide v6](docs/migration_guide_v6.md) for detailed upgrade instructions.
 
 ## *CHANGES* v5.0.0
 
