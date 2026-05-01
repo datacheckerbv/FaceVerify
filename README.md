@@ -39,6 +39,22 @@ The SDK requires a browser that supports at least ECMAScript 12 (ES12). It is hi
 
 Using the latest browser versions will ensure that all modern JavaScript features required by the SDK are supported.
 
+### Supported browsers and devices
+
+The SDK runs the face landmark model in a Web Worker (preferred) and falls back to the main thread when the worker path is unavailable. The decision is made at runtime by a WebGL2 capability probe, so support is decided by what the device can actually do — not by parsing the User-Agent.
+
+| Platform                                                | Full support (worker, ~30 FPS) | Degraded mode (main thread, throttled) | Refused                        |
+| ------------------------------------------------------- | ------------------------------ | -------------------------------------- | ------------------------------ |
+| Android Chrome                                          | Last 2 major versions          | Older devices that pass the probe      | No WebGL2 in worker or main    |
+| Desktop Chrome / Edge                                   | Last 2 major versions          | —                                      | —                              |
+| Desktop Firefox                                         | Last 2 ESR + current           | —                                      | —                              |
+| iOS Safari (and all iOS browsers — they all use WebKit) | iOS 17.0 +                     | iOS 16 (CPU delegate, ~10 FPS)         | Device fails the runtime probe |
+| macOS Safari                                            | 17.0 +                         | 16.x                                   | Device fails the runtime probe |
+
+**Degraded mode** runs `FaceLandmarker.detectForVideo()` synchronously on the main thread. The flow still completes but the camera preview is less smooth — `detectForVideo` blocks the UI thread between frames. This is the only path that works on iOS 16 (iPhone 8 / 8 Plus / X), where Safari does not support WebGL2 inside Web Workers (added in Safari 17.0).
+
+**Refused** devices receive `device_error:7001` (`DEVICE_UNSUPPORTED`) on the `onError` callback **before** the detection loop starts — see [Error Codes](#error-codes). Integrators should map this to a clear "device not supported" message rather than offering a retry.
+
 ## Steps
 
 1. Request [OAUTH Token](#oauth-token)
@@ -476,15 +492,16 @@ FV.init({
 
 The `onError` callback receives an object `{ code, stack }`. The `code` follows the format `category:NNNN` (e.g., `capture_error:4004`). Use the category prefix to determine the type of error and the appropriate response.
 
-| Category         | Description                                   | Recommended Action                                |
-| ---------------- | --------------------------------------------- | ------------------------------------------------- |
-| `capture_error`  | Camera or processing failure                  | Show camera retry UI or prompt for permission     |
-| `detect_error`   | Face detection failed after repeated attempts | Prompt user to try again or refresh               |
-| `init_error`     | Initialization failed                         | Prompt user to refresh the page                   |
-| `model_error`    | ML model failed to load                       | Check network connection, retry initialization    |
-| `opencv_error`   | Required component failed to load             | Prompt user to refresh or try a different browser |
-| `settings_error` | Invalid configuration or version mismatch     | Verify SDK configuration and assets               |
-| `token_error`    | Token missing, invalid, or not permitted      | Verify token credentials                          |
+| Category         | Description                                                                                        | Recommended Action                                                                  |
+| ---------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `capture_error`  | Camera or processing failure                                                                       | Show camera retry UI or prompt for permission                                       |
+| `detect_error`   | Face detection failed after repeated attempts                                                      | Prompt user to try again or refresh                                                 |
+| `device_error`   | Device cannot run the face landmarker (no WebGL2 in worker or main thread). Surfaced before start. | Show "device not supported" message — do **not** offer a retry; nothing will change |
+| `init_error`     | Initialization failed                                                                              | Prompt user to refresh the page                                                     |
+| `model_error`    | ML model failed to load                                                                            | Check network connection, retry initialization                                      |
+| `opencv_error`   | Required component failed to load                                                                  | Prompt user to refresh or try a different browser                                   |
+| `settings_error` | Invalid configuration or version mismatch                                                          | Verify SDK configuration and assets                                                 |
+| `token_error`    | Token missing, invalid, or not permitted                                                           | Verify token credentials                                                            |
 
 When reporting issues to support, include both `error.code` and `error.stack` — the numeric identifier in the code and the stack trace allow for precise diagnosis.
 

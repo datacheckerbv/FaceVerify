@@ -1,5 +1,11 @@
 # *CHANGELOG*
 
+## *CHANGES* v7.1.0
+
+- **iOS 16 Support**: Older devices that cannot upgrade to iOS 17 (iPhone 8 / 8 Plus / X) can now complete the FaceVerify flow. Previously these devices failed with a detection error during the session; the SDK now automatically falls back to a degraded mode that runs face detection on the main thread. Camera preview is slightly less smooth in this mode but the flow completes successfully. See [Supported browsers and devices](README.md#supported-browsers-and-devices) for the full support matrix.
+- **New Error Code `device_error:7001` (`DEVICE_UNSUPPORTED`)**: Surfaced through `onError` *before* the detection loop starts when the device cannot run face detection at all (no WebGL2 in worker or main thread). Integrators should map this to a clear "device not supported" message rather than offering a retry — see [Error Codes](README.md#error-codes).
+- **Clarified `detect_error:8001` (`DETECT_TRANSIENT`)**: Now reserved for genuinely mid-session detection failures. Capability gaps surface earlier as `DEVICE_UNSUPPORTED`.
+
 ## *CHANGES* v7.0.1
 
 - **Bug Fix**: Fixed a double-capture issue on desktop where `onComplete` could fire twice due to overlapping frame processing after a tab visibility change.
