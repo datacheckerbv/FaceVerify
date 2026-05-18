@@ -1,5 +1,13 @@
 # *CHANGELOG*
 
+## *CHANGES* v7.2.0
+
+- **Richer `onError` Payload**: `onError` now receives `{ code, stack, message, chain }`. `message` and `chain` are new optional fields — the existing `code` and `stack` are unchanged so current integrations continue to work without modification.
+  - `message`: human-readable description of the outermost error. Particularly useful on Safari/iOS, where the browser's `.stack` string does not include the message header (V8/Chrome prepends it; JavaScriptCore/Safari does not). Read `message` separately if you need the description cross-browser.
+  - `chain`: array tracing the full causal chain, outermost first, root cause last. Each entry contains `name`, `message`, optional `code`, and `stack`. The root cause's `code` is usually the most actionable; chain depth is capped at 10 to bound payload size. See [Error Codes](ERROR_CODES.md) for the full shape.
+- **Single Reporting Channel**: All internal errors are now reported exclusively through `onError`. `init()` no longer rejects on failure — consumers that previously relied on `await sdk.init().catch(...)` will not receive errors that way; they will arrive through `onError` instead. Adding `.catch()` on `init()` is no longer necessary and will not surface error events. This change removes duplicate logging and prevents unhandled promise rejections in consumers that did not wrap `init()`.
+- **Log-Level Convention Documented**: The category prefix of each `code` (`init_error`, `capture_error`, `model_error`, etc.) maps to a recommended log severity (`ERROR`, `WARN`, `INFO`). See [Log-level convention](ERROR_CODES.md#log-level-convention) for the mapping — useful for routing capture errors to alerting and reserving `INFO` for user-driven events like `exit`.
+
 ## *CHANGES* v7.1.0
 
 - **iOS 16 Support**: Older devices that cannot upgrade to iOS 17 (iPhone 8 / 8 Plus / X) can now complete the FaceVerify flow. Previously these devices failed with a detection error during the session; the SDK now automatically falls back to a degraded mode that runs face detection on the main thread. Camera preview is slightly less smooth in this mode but the flow completes successfully. See [Supported browsers and devices](README.md#supported-browsers-and-devices) for the full support matrix.
