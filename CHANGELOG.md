@@ -1,5 +1,23 @@
 # *CHANGELOG*
 
+## *CHANGES* v7.2.1
+
+- **Support for new languages**: (see [Languages](README.md#languages))
+  - Bulgarian (bg)
+  - Czech (cz)
+  - German (de)
+  - Spanish (es)
+  - French (fr)
+  - Hungarian (hu)
+  - Italian (it)
+  - Lithuanian (lt)
+  - Papiamento (pa)
+  - Polish (pl)
+  - Portuguese (pt)
+  - Romanian (ro)
+  - Slovak (sk)
+  - Ukrainian (uk)
+
 ## *CHANGES* v7.2.0
 
 - **Richer `onError` Payload**: `onError` now receives `{ code, stack, message, chain }`. `message` and `chain` are new optional fields — the existing `code` and `stack` are unchanged so current integrations continue to work without modification.

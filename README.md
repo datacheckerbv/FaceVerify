@@ -409,13 +409,32 @@ let FaceVerify = require('@datachecker/faceverify')
 
 ## Languages
 
-There are two ways in which notifications can be loaded: from file, from object (json).
+Notifications can be loaded in two ways: from a language file or from a JSON object.
 
-### File
+### Loading from a file
 
-The languages can be found in `assets/language/`. The current support languages are `en` and `nl`. More languages could be created.
+Language files are located in `assets/language/`. The currently supported languages are:
 
-The notifications can be loaded in `configuration` like the following:
+- Bulgarian (bg)
+- Czech (cz)
+- German (de)
+- English (en)
+- Spanish (es)
+- French (fr)
+- Hungarian (hu)
+- Italian (it)
+- Lithuanian (lt)
+- Dutch (nl)
+- Papiamento (pa)
+- Polish (pl)
+- Portuguese (pt)
+- Romanian (ro)
+- Slovak (sk)
+- Ukrainian (uk)
+
+Additional languages can be added if needed.
+
+You can load a language in the `configuration` by setting the `LANGUAGE` option:
 
 ```javascript
 let FV = new FaceVerify();
@@ -441,13 +460,13 @@ var LANGUAGE = {
     "blur": "Hold still",
     "capture_error": "Camera access is required",
     "challenge_0": "Center your face",
-    "challenge_out": "Face too far",
     "detect_error": "Face detection failed. Please try again.",
     "init_error": "Initialization failed. Please refresh the page.",
     "model_error": "Failed to load required resources. Please check your connection.",
     "opencv_error": "A required component failed to load. Please refresh the page.",
     "settings_error": "Configuration error. Please contact support.",
     "token_error": "Authorization failed. Please try again later.",
+    "challenge_out": "Face too far",
     "challenge_1": "Look up",
     "challenge_2": "Look right",
     "challenge_3": "Look down",
@@ -476,6 +495,12 @@ FV.init({
             "blur": "Hold still",
             "capture_error": "Camera access is required",
             "challenge_0": "Center your face",
+            "detect_error": "Face detection failed. Please try again.",
+            "init_error": "Initialization failed. Please refresh the page.",
+            "model_error": "Failed to load required resources. Please check your connection.",
+            "opencv_error": "A required component failed to load. Please refresh the page.",
+            "settings_error": "Configuration error. Please contact support.",
+            "token_error": "Authorization failed. Please try again later.",
             "challenge_out": "Face too far",
             "challenge_1": "Look up",
             "challenge_2": "Look right",

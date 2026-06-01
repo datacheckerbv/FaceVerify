@@ -1,6 +1,6 @@
 {
   "name": "@datachecker/faceverify",
-  "version": "v7.2.0",
+  "version": "v7.2.1",
   "description": "This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.",
   "main": "dist/faceverify.obf.js",
   "directories": {
@@ -12,6 +12,7 @@
     "start-server": "http-server -p 3000",
     "cypress:open": "cypress open --project tests/integration",
     "cypress:run": "cypress run --project tests/integration",
+    "pretest:e2e": "npm run build",
     "test:e2e": "npm run start-server & npm run cypress:run",
     "test:e2e:open": "npm run start-server & npm run cypress:open",
     "test:smoke": "cypress run --project tests/integration --spec 'tests/integration/cypress/e2e/smoke.cy.js'",
