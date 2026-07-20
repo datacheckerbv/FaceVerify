@@ -1,5 +1,28 @@
 # *CHANGELOG*
 
+## *CHANGES* v8.0.1
+
+- **Test fix**: Corrected an issue with the smoke test.
+
+## *CHANGES* v8.0.0 ⚠️ BREAKING CHANGE
+
+- **Generic runtime errors recategorised (Breaking)**: The catch-all `PROCESSING_ERROR` moved from `capture_error:4001` to a new category, `runtime_error:8001`; `capture_error` is now camera-only and `4001` is retired. **Action required:** handlers that match the exact code `capture_error:4001`, or that route generic errors via the `capture_error` prefix, need a `runtime_error` branch. See the [v8 Migration Guide](docs/migration_guide_v8.md).
+- **Transient detection error renumbered (Breaking)**: `DETECT_TRANSIENT` moved from `detect_error:8001` to `detect_error:9001` (the `8xxx` range now belongs to `runtime_error`, matching the AutoCapture SDK); its meaning and behaviour are unchanged. **Action required** only for handlers that match the exact code `detect_error:8001`. See the [v8 Migration Guide](docs/migration_guide_v8.md).
+- **First image is now JPEG (Breaking)**: The identity/comparison image (first image in the `onComplete` output) is encoded as JPEG (quality 90) instead of PNG; challenge images remain PNG. **Action required:** none when forwarding the unmodified output to the DataChecker API; if you store or process the images yourself, do not assume PNG. See the [v8 Migration Guide](docs/migration_guide_v8.md).
+- **Higher-quality identity image**: The first image is now captured at the camera's native resolution (typically 708×1280) and only once the scene is still and sharp — verification providers receive a face roughly twice as wide as in v7, free of motion blur, while the JPEG encoding keeps it smaller on the wire than v7's PNG.
+- **Stricter sharpness gate (Behavior Change)**: A bug silently halved the intended blur threshold; captures now require more than 70% of the last 10 frames to be sharp. Time-to-capture can be marginally longer in poor lighting.
+- **Faster camera pipeline on Android**: Camera frames are read via WebCodecs (`MediaStreamTrackProcessor`) where supported, skipping the canvas round-trip; browsers without support (e.g. iOS Safari) keep the existing path.
+- **Smoother challenge progress animation**: The progress arc now animates fluidly between detection updates, adapting to the device's detection and display rates. Most visible on low-end Android devices.
+- **Easier "look down" challenge (Behavior Change)**: The look-down completion threshold was lowered from 25° to 20° of head pitch. Looking down is ergonomically the hardest challenge direction, and device testing showed users straining to reach the old threshold; the challenge now completes on a natural nod. The other directions are unchanged.
+- **Static camera sources now fail fast (Behavior Change)**: A source that delivers only byte-identical frames for 4 seconds — a frozen camera pipeline or a static-image virtual camera — now ends the session with `capture_error:4003` instead of idling indefinitely. Live cameras are unaffected (sensor noise makes real frames unique); test rigs using a static image as a virtual camera should switch to a video source.
+- **Faster capture readiness on low-frame-rate devices**: Internal detection windows were retuned (face-presence window 9 → 5 frames) and now adapt to the device's measured frame rate — on slow devices the window shortens (never below 3 frames) so it represents the same wall-clock evidence instead of multiplying it. On a ~2fps device this removes roughly a second of gate time per capture; captures themselves are validated per-frame as before, so image quality is unaffected.
+- **SDK overlay stacking fixed (Behavior Change)**: The intended `z-index: 1000` on the mount container now applies (a property-name typo prevented it) — host-page chrome that previously rendered above the SDK overlay will now render below it.
+- **Page no longer scrollable during initialization (Bug Fix)**: The SDK container could be scrolled vertically while the splash screen was showing; it is now fully clipped.
+- **Lower per-frame overhead**: Redundant canvas reallocations and DOM writes were removed from the capture loop.
+- **New `runtime_error` and `device_error` language keys**: Both included in all bundled languages. Custom `LANGUAGE` objects should add them for localized overlay messages; the SDK falls back to the English defaults otherwise. (`device_error` alerts existed since v7.1.0 but had no message key — the overlay showed the raw category name.) See the [v8 Migration Guide](docs/migration_guide_v8.md).
+- **Black frame / stalled capture on some Android devices (Bug Fix)**: Devices that deliver I420/NV21 camera frames (e.g. Samsung Galaxy S24/S25) were read as all-black, which could stall the session as `capture_error:4003`. These formats are now decoded, and any still-unrecognised format falls back to the slower capture path instead of failing.
+- **Motion-detection startup race (Bug Fix)**: Using the motion module before it finished loading could end the session prematurely; the frame is now retried while loading, and a genuine load failure reports as `model_error:6001`.
+
 ## *CHANGES* v7.2.1
 
 - **Support for new languages**: (see [Languages](README.md#languages))
@@ -22,9 +45,9 @@
 
 - **Richer `onError` Payload**: `onError` now receives `{ code, stack, message, chain }`. `message` and `chain` are new optional fields — the existing `code` and `stack` are unchanged so current integrations continue to work without modification.
   - `message`: human-readable description of the outermost error. Particularly useful on Safari/iOS, where the browser's `.stack` string does not include the message header (V8/Chrome prepends it; JavaScriptCore/Safari does not). Read `message` separately if you need the description cross-browser.
-  - `chain`: array tracing the full causal chain, outermost first, root cause last. Each entry contains `name`, `message`, optional `code`, and `stack`. The root cause's `code` is usually the most actionable; chain depth is capped at 10 to bound payload size. See [Error Codes](ERROR_CODES.md) for the full shape.
+  - `chain`: array tracing the full causal chain, outermost first, root cause last. Each entry contains `name`, `message`, optional `code`, and `stack`. The root cause's `code` is usually the most actionable; chain depth is capped at 10 to bound payload size. See [Error Codes](README.md#error-codes) for the full shape.
 - **Single Reporting Channel**: All internal errors are now reported exclusively through `onError`. `init()` no longer rejects on failure — consumers that previously relied on `await sdk.init().catch(...)` will not receive errors that way; they will arrive through `onError` instead. Adding `.catch()` on `init()` is no longer necessary and will not surface error events. This change removes duplicate logging and prevents unhandled promise rejections in consumers that did not wrap `init()`.
-- **Log-Level Convention Documented**: The category prefix of each `code` (`init_error`, `capture_error`, `model_error`, etc.) maps to a recommended log severity (`ERROR`, `WARN`, `INFO`). See [Log-level convention](ERROR_CODES.md#log-level-convention) for the mapping — useful for routing capture errors to alerting and reserving `INFO` for user-driven events like `exit`.
+- **Log-Level Convention Documented**: The category prefix of each `code` (`init_error`, `capture_error`, `model_error`, etc.) maps to a recommended log severity (`ERROR`, `WARN`, `INFO`). See [Error Codes](README.md#error-codes) for the mapping — useful for routing capture errors to alerting and reserving `INFO` for user-driven events like `exit`.
 
 ## *CHANGES* v7.1.0
 

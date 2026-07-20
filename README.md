@@ -461,8 +461,10 @@ var LANGUAGE = {
     "capture_error": "Camera access is required",
     "challenge_0": "Center your face",
     "detect_error": "Face detection failed. Please try again.",
+    "device_error": "This device is not supported.",
     "init_error": "Initialization failed. Please refresh the page.",
     "model_error": "Failed to load required resources. Please check your connection.",
+    "runtime_error": "Something went wrong. Please try again.",
     "opencv_error": "A required component failed to load. Please refresh the page.",
     "settings_error": "Configuration error. Please contact support.",
     "token_error": "Authorization failed. Please try again later.",
@@ -496,8 +498,10 @@ FV.init({
             "capture_error": "Camera access is required",
             "challenge_0": "Center your face",
             "detect_error": "Face detection failed. Please try again.",
+            "device_error": "This device is not supported.",
             "init_error": "Initialization failed. Please refresh the page.",
             "model_error": "Failed to load required resources. Please check your connection.",
+            "runtime_error": "Something went wrong. Please try again.",
             "opencv_error": "A required component failed to load. Please refresh the page.",
             "settings_error": "Configuration error. Please contact support.",
             "token_error": "Authorization failed. Please try again later.",
@@ -519,14 +523,17 @@ The `onError` callback receives an object `{ code, stack }`. The `code` follows 
 
 | Category         | Description                                                                                        | Recommended Action                                                                  |
 | ---------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `capture_error`  | Camera or processing failure                                                                       | Show camera retry UI or prompt for permission                                       |
+| `capture_error`  | Camera failure                                                                                     | Show camera retry UI or prompt for permission                                       |
 | `detect_error`   | Face detection failed after repeated attempts                                                      | Prompt user to try again or refresh                                                 |
 | `device_error`   | Device cannot run the face landmarker (no WebGL2 in worker or main thread). Surfaced before start. | Show "device not supported" message — do **not** offer a retry; nothing will change |
 | `init_error`     | Initialization failed                                                                              | Prompt user to refresh the page                                                     |
 | `model_error`    | ML model failed to load                                                                            | Check network connection, retry initialization                                      |
 | `opencv_error`   | Required component failed to load                                                                  | Prompt user to refresh or try a different browser                                   |
+| `runtime_error`  | Uncategorised failure — no more specific category applies (catch-all of last resort)               | Show generic retry UI                                                               |
 | `settings_error` | Invalid configuration or version mismatch                                                          | Verify SDK configuration and assets                                                 |
 | `token_error`    | Token missing, invalid, or not permitted                                                           | Verify token credentials                                                            |
+
+Note that `runtime_error` does **not** mean "an error that happened at runtime" — most categories above can fire mid-session. It is the catch-all of last resort, reported only when the SDK cannot attribute a failure to any of the specific categories. Specific runtime failures keep their specific category (e.g. repeated detection failures are `detect_error`, camera loss is `capture_error`).
 
 When reporting issues to support, include both `error.code` and `error.stack` — the numeric identifier in the code and the stack trace allow for precise diagnosis.
 
@@ -593,6 +600,15 @@ The SDK will output in the following structure:
     "valid_challenges": "true|false"
 }
 ```
+
+Each `data` field is a base64-encoded image. As of v8, the first `LIVE` image
+(the identity image) is JPEG and the subsequent images are PNG; detect the
+content type from the data rather than assuming a format. Forward the output
+to the DataChecker API **unmodified** — re-encoding or editing the images will
+cause the request to be rejected.
+
+Each `meta` entry describes the corresponding capture: `x`/`y`/`width`/`height`
+locate the face region and `device` names the camera used.
 
 Example:
 
