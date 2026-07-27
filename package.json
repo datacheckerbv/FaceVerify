@@ -1,20 +1,23 @@
 {
   "name": "@datachecker/faceverify",
-  "version": "v8.0.1",
+  "version": "v8.1.0",
   "description": "This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.",
   "main": "dist/faceverify.obf.js",
   "directories": {
     "test": "tests"
   },
+  "config": {
+    "port": "4321"
+  },
   "scripts": {
     "build": "webpack --config webpack.config.js && webpack --config webpack.worker.js",
     "build:dev": "webpack --config webpack.dev.js  && webpack --config webpack.worker.js",
-    "start-server": "http-server -p 3000",
+    "start-server": "http-server -p $npm_package_config_port",
     "cypress:open": "cypress open --project tests/integration",
     "cypress:run": "cypress run --project tests/integration",
     "pretest:e2e": "npm run build",
-    "test:e2e": "start-server-and-test start-server http://localhost:3000 cypress:run",
-    "test:e2e:open": "start-server-and-test start-server http://localhost:3000 cypress:open",
+    "test:e2e": "start-server-and-test start-server http://localhost:$npm_package_config_port cypress:run",
+    "test:e2e:open": "start-server-and-test start-server http://localhost:$npm_package_config_port cypress:open",
     "test:smoke": "cypress run --project tests/integration --spec 'tests/integration/cypress/e2e/smoke.cy.js'",
     "test": "jest --coverage --config=tests/unit/jest.config.js"
   },
