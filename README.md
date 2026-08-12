@@ -21,10 +21,9 @@ The tool performs the following checks:
 - Is the detected face not too far?
 - Is the detected face not too close?
 - Is the face centered?
-- Is the image sharp?
-- Is there movement?
+- Is the user holding still?
 
-The movement check will only be used for the second picture. Since the first picture has no other picture to compare to.
+Holding still is required for every picture, including the first. The separate check that two pictures differ enough from each other applies only to the second picture of a challenge pair, since the first has nothing to compare against.
 
 ## Prerequisites
 
@@ -458,7 +457,8 @@ var LANGUAGE = {
     "face_far": "Move closer",
     "face_close": "Move back",
     "exp_dark": "Image is too dark",
-    "blur": "Hold still",
+    "blur": "Hold your phone still",
+    "stay_in_frame": "Keep your face in the frame",
     "capture_error": "Camera access is required",
     "challenge_0": "Center your face",
     "detect_error": "Face detection failed. Please try again.",
@@ -469,7 +469,7 @@ var LANGUAGE = {
     "opencv_error": "A required component failed to load. Please refresh the page.",
     "settings_error": "Configuration error. Please contact support.",
     "token_error": "Authorization failed. Please try again later.",
-    "challenge_out": "Face too far",
+    "challenge_out": "Turn back a little",
     "challenge_1": "Look up",
     "challenge_2": "Look right",
     "challenge_3": "Look down",
@@ -495,7 +495,8 @@ FV.init({
             "face_far": "Move closer",
             "face_close": "Move back",
             "exp_dark": "Image is too dark",
-            "blur": "Hold still",
+            "blur": "Hold your phone still",
+            "stay_in_frame": "Keep your face in the frame",
             "capture_error": "Camera access is required",
             "challenge_0": "Center your face",
             "detect_error": "Face detection failed. Please try again.",
@@ -506,7 +507,7 @@ FV.init({
             "opencv_error": "A required component failed to load. Please refresh the page.",
             "settings_error": "Configuration error. Please contact support.",
             "token_error": "Authorization failed. Please try again later.",
-            "challenge_out": "Face too far",
+            "challenge_out": "Turn back a little",
             "challenge_1": "Look up",
             "challenge_2": "Look right",
             "challenge_3": "Look down",

@@ -21,6 +21,12 @@ The Customer acknowledges and agrees to the following restrictions:
 
 **Modifications and Updates**: DataChecker B.V. reserves the right to modify its software within its sole discretion at any time without prior notice.
 
+## Third-Party Components
+
+The Software is distributed with third-party components that are **not** owned by DataChecker B.V. and that are licensed to the Customer by their respective copyright holders under their own terms, including the Apache License 2.0 and the MIT License. Those components are identified in **`NOTICE.md`**, distributed with the Software.
+
+The **Ownership** and **Restrictions** sections above apply to the Software as authored by DataChecker B.V., and not to those third-party components. Where this Agreement conflicts with the license of a third-party component, that component's own license governs that component.
+
 ---
 
 *This Agreement constitutes the entire agreement between the Customer and DataChecker B.V. regarding the use of the Software and supersedes all prior or contemporaneous understandings and agreements, whether written or oral, regarding such subject matter.*

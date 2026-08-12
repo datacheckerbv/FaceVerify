@@ -1,6 +1,6 @@
 {
   "name": "@datachecker/faceverify",
-  "version": "v8.1.0",
+  "version": "v8.2.0",
   "description": "This project contains Datachecker's FaceVerify tool, that captures images of faces to be used in liveness detection. The tool only takes a capture once the trigger mechanism is fired.",
   "main": "dist/faceverify.obf.js",
   "directories": {
@@ -13,6 +13,7 @@
     "build": "webpack --config webpack.config.js && webpack --config webpack.worker.js",
     "build:dev": "webpack --config webpack.dev.js  && webpack --config webpack.worker.js",
     "start-server": "http-server -p $npm_package_config_port",
+    "start-server:diag": "node dev-server.js",
     "cypress:open": "cypress open --project tests/integration",
     "cypress:run": "cypress run --project tests/integration",
     "pretest:e2e": "npm run build",
@@ -58,6 +59,7 @@
     "docs/",
     "CHANGELOG.md",
     "LICENSE.md",
+    "NOTICE.md",
     "README.md"
   ],
   "dependencies": {

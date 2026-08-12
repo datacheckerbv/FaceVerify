@@ -116,10 +116,12 @@ in v7 — while the JPEG encoding keeps it *smaller* on the wire than v7's PNG.
   If your page deliberately layered chrome above the SDK overlay with a
   z-index below 1000, it will now render underneath — raise it above 1000 if
   that layering was intentional.
-- **Stricter capture gating**: the identity capture now waits for a still,
-  sharp frame (and a fixed sharpness threshold applies). Users who move a lot
-  see a "hold still" prompt and capture can take marginally longer in poor
-  lighting; no integration change needed.
+- **Stricter capture gating**: the identity capture now waits for a still
+  frame. Users who move a lot see a "hold still" prompt and capture can take
+  marginally longer; no integration change needed. In v8.2.0 this gate was
+  reworked to measure movement from the face landmarks and to capture anyway
+  after a few seconds, so it can no longer hold a session up (see the
+  CHANGELOG); v8.0.0's separate sharpness gate was removed in v8.2.0.
 
 ## Error code categories
 
@@ -170,7 +172,10 @@ awareness.
   previously read as all-black, which could stall the session and surface as
   `capture_error:4003` (frame skip). Any pixel format still not recognised now
   falls back automatically to the slower canvas read path instead of failing.
-- **Motion-detection startup race**: If the motion-detection module was used
-  before it finished loading, the session could end prematurely with an internal
-  error. The SDK now retries the frame while the module loads, and reports a
-  genuine load failure through `onError` as `model_error:6001`.
+- **Motion-detection startup race** (v8.0.0): If the motion-detection module was
+  used before it finished loading, the session could end prematurely with an
+  internal error. v8.0.0 retried the frame while the module loaded and reported a
+  genuine load failure through `onError` as `model_error:6001`. As of v8.2.0 the
+  separate motion-detection module is gone — movement is derived from the face
+  landmarks that are already tracked every frame — so this race no longer exists
+  and that module is no longer a source of `model_error:6001`.
