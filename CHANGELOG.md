@@ -1,5 +1,14 @@
 # *CHANGELOG*
 
+## *CHANGES* v8.2.3
+
+- **Test fix**: Corrected an issue with the smoke test.
+
+## *CHANGES* v8.2.2
+
+- **A deliberate stop no longer reports an error**: Calling `stop()` while the SDK was still starting up, or a user exiting during load, tore down the DOM and camera underneath the initialisation still in flight. The resulting failures were reported through `onError` as `init_error:1003` or `capture_error:4004`, telling you initialisation had failed or the camera was denied when in fact the session had been cancelled on purpose. A requested teardown is now silent on `onError`. Genuine failures are unaffected. **Action:** none. If you suppressed these codes around your own `stop()` calls, that workaround is no longer needed.
+- **Camera preview correction now recovers when the phone is busy at startup (Bug Fix)**: The iOS 27 correction shipped in v8.2.0 only took effect if the browser happened to be free to redraw at the exact moment the camera opened, which on a phone busy starting up it often is not. It is now attempted again over the following seconds, so the preview corrects itself shortly after appearing rather than staying small for the session. It also no longer decides the screen has finished drawing on a fixed timer, which could not tell a slow device from a backgrounded tab, and always restores the preview if it fails part-way, where an error could previously leave it invisible. The follow-up attempts only happen when the device was actually too slow to redraw, measured rather than assumed, so a phone that corrected immediately does not blink again. **Known limitation:** a device that stays fully occupied for several seconds may still show the smaller preview until it frees up. The area reserved for the preview is always sized correctly, so captured images are unaffected either way.
+
 ## *CHANGES* v8.2.1
 
 - **Unsupported devices now report a `device_error` instead of a model failure**: FaceVerify requires WebAssembly with SIMD support, and a device without it cannot run the SDK at all. Those devices previously reported `model_error:6001` ("Could not load models"), which reads as a temporary network or loading problem and invited a retry that could never succeed. They now report the `device_error` category, which already means "unsupported device, do not offer retry": `device_error:7002` when WebAssembly is unavailable, and `device_error:7003` when SIMD is unavailable. **Action:** if you branch on error codes, treat `device_error` as terminal and show an unsupported-device message rather than a retry. In practice `7003` means iOS below 16.4; see [Compatibility](README.md#compatibility) for the full minimum-version table.
