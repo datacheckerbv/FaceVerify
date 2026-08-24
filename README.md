@@ -38,6 +38,26 @@ The SDK requires a browser that supports at least ECMAScript 12 (ES12). It is hi
 
 Using the latest browser versions will ensure that all modern JavaScript features required by the SDK are supported.
 
+### Minimum requirements
+
+The SDK runs its image processing and face detection in WebAssembly, and the bundled OpenCV build requires **WebAssembly SIMD**. There is no fallback for a device that lacks either: the SDK refuses to start rather than degrading.
+
+| Requirement       | Minimum version                                        |
+| ----------------- | ------------------------------------------------------ |
+| iOS / iPadOS      | **16.4** (all iOS browsers use WebKit, so this applies regardless of browser) |
+| Safari on macOS   | 16.4                                                   |
+| Chrome / Edge     | 91                                                     |
+| Firefox           | 89                                                     |
+| Android           | Chrome 91 + / Samsung Internet 16 + (the **browser** version matters, not the Android version) |
+
+Devices below these versions are refused with a `device_error` before the camera opens. See [Unsupported devices](#unsupported-devices).
+
+**iOS and Android fail differently, and the message you show should differ too.**
+
+- **On iOS, the browser is the operating system.** Every iOS browser uses WebKit, so WebAssembly SIMD arrives with iOS 16.4 and cannot be obtained any sooner. Installing a different browser changes nothing. For hardware that cannot go past iOS 15 (iPhone 7 and older, still receiving 15.8.x security updates) this is permanent: no update will ever make the SDK work. "Update iOS, or use a different device" is the only honest message.
+- **On Android, the browser updates independently of the operating system.** Chrome and the Android System WebView update through the Play Store, so a phone on an old Android release usually still runs a current browser with SIMD. A 2016 handset that keeps receiving Chrome updates works fine. When Android does fail it is normally the *browser* that is stale, not the OS: most often on devices without Play Store access (some Huawei models, AOSP or regional builds), or an in-app browser sitting on an outdated System WebView. Here "update your browser, or open the link in Chrome" is usually actionable.
+- **WebAssembly can be switched off on an otherwise-current device.** iOS Lockdown Mode disables it, as do some managed-browser policies. These report `7002` rather than `7003`, so you can tell them apart from old hardware. Unlike old hardware, the user can often fix it.
+
 ### Supported browsers and devices
 
 The SDK runs the face landmark model in a Web Worker (preferred) and falls back to the main thread when the worker path is unavailable. The decision is made at runtime by a WebGL2 capability probe, so support is decided by what the device can actually do — not by parsing the User-Agent.
@@ -47,12 +67,24 @@ The SDK runs the face landmark model in a Web Worker (preferred) and falls back 
 | Android Chrome                                          | Last 2 major versions          | Older devices that pass the probe      | No WebGL2 in worker or main    |
 | Desktop Chrome / Edge                                   | Last 2 major versions          | —                                      | —                              |
 | Desktop Firefox                                         | Last 2 ESR + current           | —                                      | —                              |
-| iOS Safari (and all iOS browsers — they all use WebKit) | iOS 17.0 +                     | iOS 16 (CPU delegate, ~10 FPS)         | Device fails the runtime probe |
-| macOS Safari                                            | 17.0 +                         | 16.x                                   | Device fails the runtime probe |
+| iOS Safari (and all iOS browsers, which all use WebKit) | iOS 17.0 +                     | iOS 16.4 to 16.7 (CPU delegate, ~10 FPS) | Below iOS 16.4, or the device fails the runtime probe |
+| macOS Safari                                            | 17.0 +                         | 16.4 to 16.7                            | Below 16.4, or the device fails the runtime probe |
 
-**Degraded mode** runs `FaceLandmarker.detectForVideo()` synchronously on the main thread. The flow still completes but the camera preview is less smooth — `detectForVideo` blocks the UI thread between frames. This is the only path that works on iOS 16 (iPhone 8 / 8 Plus / X), where Safari does not support WebGL2 inside Web Workers (added in Safari 17.0).
+**Degraded mode** runs `FaceLandmarker.detectForVideo()` synchronously on the main thread. The flow still completes but the camera preview is less smooth, because `detectForVideo` blocks the UI thread between frames. This is the only path that works on iOS 16.4 to 16.7 (iPhone 8 / 8 Plus / X, which reach 16.7), where Safari does not support WebGL2 inside Web Workers (added in Safari 17.0). Note the lower bound: below 16.4 there is no WebAssembly SIMD, so degraded mode is not available either.
 
-**Refused** devices receive `device_error:7001` (`DEVICE_UNSUPPORTED`) on the `onError` callback **before** the detection loop starts — see [Error Codes](#error-codes). Integrators should map this to a clear "device not supported" message rather than offering a retry.
+### Unsupported devices
+
+A device that cannot run the SDK is refused on the `onError` callback **before** the camera opens or the detection loop starts. All three codes share the `device_error` category, so the simplest integration branches on the prefix; the individual codes let you tailor the message.
+
+| Code                | Meaning                                              | What to tell the user                                     |
+| ------------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| `device_error:7001` | No WebGL2 in either a Web Worker or the main thread   | Device not supported                                      |
+| `device_error:7002` | No WebAssembly at all                                 | Usually a restricted browser mode. On iOS, check whether Lockdown Mode is on |
+| `device_error:7003` | WebAssembly present but without SIMD                  | On iOS: update to 16.4 or later, otherwise the device is too old. On Android: update the browser, or open the link in Chrome |
+
+**Do not offer a retry for any of these.** Nothing about the device changes between attempts. Recovery, where it exists, needs an action outside the page: an OS update, a browser update, or turning off Lockdown Mode.
+
+`7002` is the one case that may be user-fixable on current hardware, since Lockdown Mode and browser policies can be turned off. That is why it is reported separately rather than folded into `7003`.
 
 ## Steps
 
@@ -223,7 +255,7 @@ FV.init({
 | **ATTRIBUTE** | **FORMAT**          | **DEFAULT VALUE**                           | **EXAMPLE**                                 | **NOTES**                                                                                                               |
 | ------------- | ------------------- | ------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `onComplete`  | javascript function |                                             | `function(data) {console.log(data)}`        | **required**<br> Callback that fires when all interactive tasks in the workflow have been completed.                    |
-| `onError`     | javascript function | `function(error) {console.log(error.code)}` | `function(error) {console.log(error.code)}` | **required**<br> Callback that fires when an error occurs. Receives `{ code, stack }`. See [Error Codes](#error-codes). |
+| `onError`     | javascript function | `function(error) {console.log(error.code)}` | `function(error) {console.log(error.code)}` | **required**<br> Callback that fires when an error occurs. Receives `{ code, message, stack, chain }`. See [Error Codes](#error-codes). |
 | `onUserExit`  | javascript function | `function(error) {console.log(error)}`      | `function(error) {window.history.back()}`   | **required**<br> Callback that fires when the user exits the flow without completing it.                                |
 
 ### onComplete
@@ -521,13 +553,22 @@ FV.init({
 
 ## Error Codes
 
-The `onError` callback receives an object `{ code, stack }`. The `code` follows the format `category:NNNN` (e.g., `capture_error:4004`). Use the category prefix to determine the type of error and the appropriate response.
+The `onError` callback receives an object with four properties:
+
+| Property  | Description |
+| --------- | ----------- |
+| `code`    | Structured code in the form `category:NNNN`, e.g. `capture_error:4004`. Branch on the category prefix |
+| `message` | Human-readable description of the failure |
+| `stack`   | Stack trace string. Include it when reporting to support |
+| `chain`   | Array tracing the causal chain, outermost first and root cause last. Each entry has `name`, `message`, optional `code` and `stack` |
+
+Use the category prefix to determine the type of error and the appropriate response.
 
 | Category         | Description                                                                                        | Recommended Action                                                                  |
 | ---------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | `capture_error`  | Camera failure                                                                                     | Show camera retry UI or prompt for permission                                       |
 | `detect_error`   | Face detection failed after repeated attempts                                                      | Prompt user to try again or refresh                                                 |
-| `device_error`   | Device cannot run the face landmarker (no WebGL2 in worker or main thread). Surfaced before start. | Show "device not supported" message — do **not** offer a retry; nothing will change |
+| `device_error`   | Device cannot run the SDK: no WebGL2 (`7001`), no WebAssembly (`7002`), or no WebAssembly SIMD (`7003`). Surfaced before start. | Show "device not supported" message. Do **not** offer a retry; nothing will change. See [Unsupported devices](#unsupported-devices) |
 | `init_error`     | Initialization failed                                                                              | Prompt user to refresh the page                                                     |
 | `model_error`    | ML model failed to load                                                                            | Check network connection, retry initialization                                      |
 | `opencv_error`   | Required component failed to load                                                                  | Prompt user to refresh or try a different browser                                   |

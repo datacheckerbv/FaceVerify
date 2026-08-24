@@ -1,5 +1,11 @@
 # *CHANGELOG*
 
+## *CHANGES* v8.2.1
+
+- **Unsupported devices now report a `device_error` instead of a model failure**: FaceVerify requires WebAssembly with SIMD support, and a device without it cannot run the SDK at all. Those devices previously reported `model_error:6001` ("Could not load models"), which reads as a temporary network or loading problem and invited a retry that could never succeed. They now report the `device_error` category, which already means "unsupported device, do not offer retry": `device_error:7002` when WebAssembly is unavailable, and `device_error:7003` when SIMD is unavailable. **Action:** if you branch on error codes, treat `device_error` as terminal and show an unsupported-device message rather than a retry. In practice `7003` means iOS below 16.4; see [Compatibility](README.md#compatibility) for the full minimum-version table.
+- **A device without WebAssembly no longer hangs**: Previously these devices reported nothing at all. `onError` never fired and the SDK stayed on its loading screen indefinitely, so the session could not end and the user was left waiting. It now fails immediately with `device_error:7002`. Unexpected failures during start-up are also reported through `onError` now instead of being swallowed.
+- **Clearer message when the device is unsupported**: The `message` on the reported error named the missing technology, which an end user cannot act on. It now states the requirement in terms of the device and names the iOS version that provides it, so it can be shown to the user as-is.
+
 ## *CHANGES* v8.2.0
 
 - **Movement is now measured from face landmarks (Behavior Change)**: Movement detection tracks how far the face's own landmarks travel, relative to the size of the face in view, instead of comparing image patches between frames. It behaves the same across devices and camera distances, and is robust in low light and on cameras with heavy noise reduction — the conditions that previously produced persistent coaching messages.
